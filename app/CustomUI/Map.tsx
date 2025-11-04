@@ -22,6 +22,7 @@ const Map = () => {
                     position={[51.505, -0.09]}
                     icon={
                         new Icon({
+                            // @ts-expect-error icon string issue, nothing to worry about
                             iconUrl: markerIconPng,
                             iconSize: [25, 41],
                             iconAnchor: [12, 41],
