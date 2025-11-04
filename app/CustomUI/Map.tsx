@@ -1,10 +1,9 @@
 'use client'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import { Icon } from 'leaflet';
 import ButtonLayout from "@/app/CustomUI/ButtonLayout";
-
+import markerIconPng from "leaflet/dist/images/marker-icon.png"
 const Map = () => {
     return (
         <div className="relative w-screen h-screen m-0 p-0">
@@ -44,4 +43,5 @@ const Map = () => {
     );
 };
 
+//if you want the header on top, remove absolute in the div above
 export default Map;
