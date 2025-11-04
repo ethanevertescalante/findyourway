@@ -1,25 +1,19 @@
 'use client'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import markerIconPng from "leaflet/dist/images/marker-icon.png"
-import {Icon} from 'leaflet'
-/*
-TODO:: the scrolling feels so janky because of two things happening at the same time
-When you scroll is it both scrolling and tapping which causes it to "double scroll"
-for now, I will disable trackpad scroll until we figure out a fix
+import markerIconPng from "leaflet/dist/images/marker-icon.png";
+import { Icon } from 'leaflet';
+import ButtonLayout from "@/app/CustomUI/ButtonLayout";
 
-update, it might be something else, not work looking at right now
-For Now, I have disabled any zoom with trackpad, only zoom with buttons is allowed
- */
 const Map = () => {
     return (
-        <div style={{ width: '100vw', height: '100vh', margin: 0, padding: 0 }}>
+        <div className="relative w-screen h-screen m-0 p-0">
             <MapContainer
                 center={[51.505, -0.09]}
                 zoom={10}
                 scrollWheelZoom={false}
                 doubleClickZoom={false}
-                style={{ width: '100%', height: '100%' }}
+                style={{ width: '100%', height: '100%', position: 'fixed', top: 0, left: 0 }}
             >
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -28,21 +22,26 @@ const Map = () => {
                 <Marker
                     position={[51.505, -0.09]}
                     icon={
-                    new Icon({
-                        // @ts-expect-error icon string issue, nothing to worry about
-                        iconUrl: markerIconPng,
-                        iconSize: [25, 41],
-                        iconAnchor: [12, 41],
-                        popupAnchor:[0,-30]}
-                    )}
+                        new Icon({
+                            iconUrl: markerIconPng,
+                            iconSize: [25, 41],
+                            iconAnchor: [12, 41],
+                            popupAnchor: [0, -30],
+                        })
+                    }
                 >
-                <Popup closeOnEscapeKey={true} >
-                    A pretty CSS3 popup. <br /> Easily customizable.
-                </Popup>
+                    <Popup closeOnEscapeKey={true}>
+                        A pretty CSS3 popup. <br /> Easily customizable.
+                    </Popup>
                 </Marker>
             </MapContainer>
+
+            {/* absolutely position the buttons at the bottom */}
+            <div className="absolute bottom-4 left-0 w-full flex justify-center">
+                <ButtonLayout />
+            </div>
         </div>
-    )
-}
+    );
+};
 
 export default Map;
