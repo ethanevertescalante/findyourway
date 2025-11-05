@@ -1,17 +1,16 @@
 import type { Key } from 'react-aria'
 import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/button-group";
 import {useState} from "react";
-import MapIcon from "@/app/CustomUI/MapIcon";
-import DiscoverIcon from "@/app/CustomUI/DiscoverIcon";
-import SettingsIcon from "@/app/CustomUI/SettingsIcon";
-import SearchIcon from "@/app/CustomUI/SearchIcon";
-import AdditionIcon from "@/app/CustomUI/AdditionIcon";
+import MapIcon from "@/app/CustomUI/Icons/MapIcon";
+import DiscoverIcon from "@/app/CustomUI/Icons/DiscoverIcon";
+import SettingsIcon from "@/app/CustomUI/Icons/SettingsIcon";
+import SearchIcon from "@/app/CustomUI/Icons/SearchIcon";
+import {AdditionButton} from "@/app/CustomUI/AdditionDropdown";
+import Button from "./Button"
 
 const ButtonLayout = ()  => {
 
     const [selectedKeys, setSelectedKeys] = useState<Set<Key>>(new Set(["map"]));
-    //idk should I add another useState?
-
 
     return (
         <div className="flex flex-row justify-between">
@@ -19,13 +18,14 @@ const ButtonLayout = ()  => {
                 <ButtonGroupItem className=" hover:bg-amber-200" iconTrailing={SearchIcon} id='search'> </ButtonGroupItem>
             </ButtonGroup>
         <ButtonGroup size="lg" selectedKeys={selectedKeys} selectionMode={"single"}  onSelectionChange={setSelectedKeys}>
-            {/*<ButtonGroupItem  id="findyourway" className='font-bold underline italic'>FindYourWay</ButtonGroupItem>*/}
-            <ButtonGroupItem className=" hover:bg-amber-200 selected:bg-amber-500 selected:font-bold" iconTrailing={MapIcon} id='map'>Map</ButtonGroupItem>
-            <ButtonGroupItem className=" hover:bg-amber-200 selected:bg-amber-500 selected:font-bold" iconTrailing={DiscoverIcon} id='discover'>Discover</ButtonGroupItem>
-            <ButtonGroupItem className=" hover:bg-amber-200 selected:bg-amber-500 selected:font-bold" iconTrailing={SettingsIcon} id='settings'>Settings</ButtonGroupItem>
+            <Button id='site-name' buttonName="FindYourWay" homeButton={true}/>
+            <Button picture={MapIcon} id="map" buttonName={"Map"}/>
+            <Button picture={DiscoverIcon} id="discover" buttonName={"Discover"}/>
+            <Button picture={SettingsIcon} id="settings" buttonName={"Settings"}/>
+
         </ButtonGroup>
             <ButtonGroup size="lg" className="pl-3" selectedKeys={[]}>
-                <ButtonGroupItem className=" hover:bg-amber-200" iconTrailing={AdditionIcon} id='add'> </ButtonGroupItem>
+               <AdditionButton/>
             </ButtonGroup>
         </div>
     )
