@@ -63,3 +63,115 @@ input[type="number"] {
 input[type="search"]::-webkit-search-cancel-button {
   -webkit-appearance: none;
 }
+
+
+
+
+.mapButton {
+  color: rgb(0, 0, 0);
+  border: 2px solid rgb(200, 200, 200, 0.9);
+  background-color: rgb(255, 255, 255);
+  position: absolute;
+  left: 4%;
+  top: 100px;
+  transform: translateX(-50%);
+  z-index: 1000;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+.mapButton:hover {
+  color: #3c52b2;
+}
+
+
+.pinEditButton {
+  color: rgb(0, 0, 0);
+  border: 2px solid rgb(200, 200, 200, 0.9);
+  background-color: rgb(255, 255, 255);
+  position: absolute;
+  left: 4%;
+  top: 150px;
+  transform: translateX(-50%);
+  z-index: 1000;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+.pinEditButton:hover {
+  color: #3c52b2;
+}
+
+
+
+.pinEditBox {
+  color: rgb(0, 0, 0);
+  border: 2px solid rgb(200, 200, 200, 0.9);
+  background-color: rgb(255, 255, 255);
+  position: absolute; top: 220px; left: 11px; z-index: 2000;
+  width: min(500px, 90vw);
+  height: min(365px, 90vw);
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pinEditBox-inner {
+  color: rgb(0, 0, 0);
+  transform: translateX(+2%) translateY(-19%);
+}
+
+.pinEditBox-title {
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translateY(-290%);
+
+
+}
+
+.pinEditBox label { display: block; font-weight: 600; }
+
+.pinEditBox textarea {
+  width: 96%;
+  box-sizing: border-box;
+  resize: vertical;
+  padding: 8px;
+  resize: none;
+}
+
+
+.pinEditExitButton {
+  width: 20px;
+  height: 23px;
+  transform: translateX(+1890%) translateY(-90%);
+  border: 2px solid rgb(200, 200, 200, 0.9);
+  background-color: rgb(255, 255, 255);
+  padding: 10px;
+  margin: 20px;
+  display: flex; /* Example: using flexbox for content alignment */
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+.pinEditExitButton:hover {
+  color: #3c52b2;
+}
+
+
+.pinEditSaveButton {
+  width: 70px;
+  height: 23px;
+  transform: translateX(+270%) translateY(-88%);
+  border: 2px solid rgb(200, 200, 200, 0.9);
+  background-color: rgb(255, 255, 255);
+  padding: 10px;
+  margin: 20px;
+  display: flex; /* Example: using flexbox for content alignment */
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+.pinEditSaveButton:hover {
+  color: #3c52b2;
+}
