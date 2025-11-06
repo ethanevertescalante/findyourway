@@ -15,7 +15,13 @@ const Button = ({ picture, id, buttonName, homeButton }: ButtonProps) => {
 
     return (
             <ButtonGroupItem
-                className={!homeButton ? "relative overflow-visible hover:bg-amber-200 selected:bg-amber-500 selected:font-bold group" : "text-white relative overflow-visible bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 group hover:text-white selected:text-white"}
+                className={
+                homeButton
+                    ?
+                    "text-white italic relative overflow-visible bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 group hover:text-white selected:text-white"
+                    :
+                    "relative overflow-visible hover:bg-amber-200 selected:bg-amber-500 selected:font-bold group"
+                }
                 iconTrailing={picture}
                 id={id}
                 {...(homeButton ? { onClickCapture: play } : {})}
