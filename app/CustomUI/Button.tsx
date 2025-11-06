@@ -1,6 +1,5 @@
 import { ButtonGroupItem } from "@/components/base/button-group/button-group";
-import React, {useEffect} from "react";
-import { motion } from "framer-motion";
+import React from "react";
 import dogImage from "../../public/dog.png"
 import Image from "next/image";
 type ButtonProps = {
@@ -12,7 +11,7 @@ type ButtonProps = {
 
 const Button = ({ picture, id, buttonName, homeButton }: ButtonProps) => {
     const audio = React.useMemo(() => new Audio("/dogBarking.mp3"), []);
-    const play = () => { audio.play() };
+    const play = () => { audio.play().then(r => r) };
 
     return (
             <ButtonGroupItem
