@@ -18,7 +18,7 @@ const ButtonLayout = ()  => {
                 <ButtonGroupItem className=" hover:bg-amber-200" iconTrailing={SearchIcon} id='search'> </ButtonGroupItem>
             </ButtonGroup>
         <ButtonGroup size="lg" selectedKeys={selectedKeys} selectionMode={"single"}  onSelectionChange={setSelectedKeys}>
-            <Button id='site-name' buttonName="FindYourWay" homeButton={true}/>
+            <Button buttonName="FindYourWay" homeButton={true}/>
             <Button picture={MapIcon} id="map" buttonName={"Map"}/>
             <Button picture={DiscoverIcon} id="discover" buttonName={"Discover"}/>
             <Button picture={SettingsIcon} id="settings" buttonName={"Settings"}/>
