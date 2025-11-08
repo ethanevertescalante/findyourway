@@ -53,7 +53,7 @@ export const LoginButtons = () => {
             <ButtonGroupButtonItem
                 id="sign-in"
                 buttonName="Sign In"
-                title="Login To FindYourWay!"
+                title="Welcome Back To FindYourWay!"
                 dialogForm={<SignInForm />}
             />
         </ButtonGroup>

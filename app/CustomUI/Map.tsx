@@ -4,8 +4,9 @@ import 'leaflet/dist/leaflet.css';
 import { Icon } from 'leaflet';
 import ButtonLayout from "@/app/CustomUI/Buttons/ButtonLayout";
 import markerIconPng from "leaflet/dist/images/marker-icon.png"
-import {AvatarDropdown} from "@/app/CustomUI/Dropdowns/AvatarDropdown";
 import {LoginButtons} from "@/app/CustomUI/Buttons/LoginButtons";
+
+
 const Map = () => {
     return (
         <div className="relative w-screen h-screen m-0 p-0">

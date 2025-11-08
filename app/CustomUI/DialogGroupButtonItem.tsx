@@ -1,11 +1,11 @@
-// ButtonGroupButtonItem.tsx (uses ButtonGroupItem as the trigger)
 "use client";
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ButtonGroupItem } from "@/components/base/button-group/button-group";
 import { ReactElement } from "react";
 
 type ButtonGroupButtonItemsProps = {
-    id: string;                // pass through for ButtonGroupItem
+    id: string;
     buttonName: string;
     title: string;
     dialogForm: ReactElement;
