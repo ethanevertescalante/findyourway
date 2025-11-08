@@ -1,18 +1,24 @@
-import {ButtonGroup, ButtonGroupItem} from "@/components/base/button-group/button-group";
-import {ButtonGroupButtonItem} from "@/app/CustomUI/DialogGroupButtonItem";
+import { ButtonGroup } from "@/components/base/button-group/button-group";
+import { ButtonGroupButtonItem } from "@/app/CustomUI/DialogGroupButtonItem";
 import { Input } from "@/components/base/input/input";
 import { Button } from "@/components/base/buttons/button"
+import Divider from '@mui/material/Divider';
+import {SocialButton} from "@/components/base/buttons/social-button";
+import {AtSign} from "lucide-react";
+import {Globe05} from "@untitledui/icons";
 
 
-const LoginForm = () => (
+const SignInForm = () => (
         <div className="grid gap-4">
             <div className="grid gap-3">
-                <Input isRequired label="Login" placeholder="email@findyourway.com"/>
+                <Input isRequired label="Email" placeholder="email@findyourway.com"/>
             </div>
             <div className="grid gap-3">
                 <Input isRequired label="Password" placeholder="abcd-1234"/>
             </div>
-            <Button color="primary" size="lg">Login In</Button>
+            <Button color="primary" size="lg" iconLeading={AtSign}>Sign In With Email</Button>
+            <Divider textAlign="center">OR</Divider>
+            <SocialButton social={"google"}>Sign In With Google</SocialButton>
         </div>
 
 )
@@ -28,7 +34,7 @@ const RegisterForm = () => (
         <div className="grid gap-3">
             <Input isRequired label="Re-Type Password" placeholder="re-type password"/>
         </div>
-        <Button color="primary" size="lg">Register</Button>
+        <Button color="primary" size="lg" iconLeading={Globe05}>Start Travelling!</Button>
     </div>
 
 )
@@ -45,10 +51,10 @@ export const LoginButtons = () => {
                 dialogForm={<RegisterForm />}
             />
             <ButtonGroupButtonItem
-                id="login"
-                buttonName="Login"
+                id="sign-in"
+                buttonName="Sign In"
                 title="Login To FindYourWay!"
-                dialogForm={<LoginForm />}
+                dialogForm={<SignInForm />}
             />
         </ButtonGroup>
     )

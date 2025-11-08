@@ -18,7 +18,7 @@ export const ButtonGroupButtonItem = ({ id, buttonName, title, dialogForm }: But
                 <ButtonGroupItem
                     id={id}
                     className={
-                    id === 'login'
+                    id === 'sign-in'
                         ?
                         'bg-amber-200 hover:bg-amber-500 selected:bg-amber-200 selected:hover:bg-amber-500 '
                         :
