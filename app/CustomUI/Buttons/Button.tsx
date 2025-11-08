@@ -1,6 +1,6 @@
 import { ButtonGroupItem } from "@/components/base/button-group/button-group";
 import React from "react";
-import dogImage from "../../public/dog.png"
+import dogImage from "../../../public/dog.png"
 import Image from "next/image";
 type ButtonProps = {
     picture?: React.ReactNode; // JSX.Element also ok

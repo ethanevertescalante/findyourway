@@ -2,8 +2,10 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Icon } from 'leaflet';
-import ButtonLayout from "@/app/CustomUI/ButtonLayout";
+import ButtonLayout from "@/app/CustomUI/Buttons/ButtonLayout";
 import markerIconPng from "leaflet/dist/images/marker-icon.png"
+import {AvatarDropdown} from "@/app/CustomUI/Dropdowns/AvatarDropdown";
+import {LoginButtons} from "@/app/CustomUI/Buttons/LoginButtons";
 const Map = () => {
     return (
         <div className="relative w-screen h-screen m-0 p-0">
@@ -36,7 +38,10 @@ const Map = () => {
                 </Marker>
             </MapContainer>
 
-            {/* absolutely position the buttons at the bottom */}
+            <div className="flex justify-end pt-4 pr-4">
+                   <LoginButtons/>
+                {/*<AvatarDropdown/>*/}
+            </div>
             <div className="absolute bottom-4 left-0 w-full flex justify-center">
                 <ButtonLayout />
             </div>
