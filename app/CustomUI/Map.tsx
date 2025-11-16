@@ -6,22 +6,24 @@ import ButtonLayout from "@/app/CustomUI/ButtonLayout";
 import markerIconPng from "leaflet/dist/images/marker-icon.png"
 import {useRef, useState, useMemo, useEffect, useCallback} from "react";
 import SearchBar from './SearchBar';
+import { addPinAtCenter } from "./AddPin";
+import type { PinFormData } from "./PinMenu"
+
+
+
+export type Pin = {
+    id: string;
+    position: [number, number]; //lat + lng
+    location: string;
+    review: string;
+    cost: string; // e.g., USD
+    draggable: boolean;
+};
 
 const Map = () => {
 
-    type Pin = {
-        id: string;
-        position: [number, number];
-        location: string;
-        review: string;
-        cost: number; // e.g., USD
-    };
-
     const [pins, setPins] = useState<Pin[]>([]);
-
     const mapRef = useRef<LeafletMap | null>(null);
-    const [draggable, setDraggable] = useState(false)
-    const [pinEditWindowOpen, setPinEditWindowOpen] = useState(false)
 
     const leafletIcon = useMemo(() =>
             new Icon({
@@ -34,59 +36,16 @@ const Map = () => {
         []
     );
 
-    const PinEditWindow = (props) => {
-
-        return (
-
-            <div className="pinEditBox">
-                <button onClick={() => setPinEditWindowOpen(false)} className="pinEditExitButton">x</button>
-
-                <div className="pinEditBox-title">
-                    Pin Details
-                </div>
-                <div className="pinEditBox-inner">
-                    <label htmlFor="username" className="locationBoxHeader">Location:</label>
-                    <textarea className="locationBox"
-                              id="username"
-                              name="username"
-                              placeholder="Enter your location here"></textarea>
-
-
-                    <label htmlFor="message" className="reviewBoxHeader">Review:</label>
-                    <textarea className="reviewBox"
-                              id="message"
-                              name="message"
-                              placeholder="Enter your review here"></textarea>
-
-
-                    <label htmlFor="message" className="reviewBoxHeader">Cost:</label>
-                    <textarea className="reviewBox"
-                              id="message"
-                              name="message"
-                              placeholder="Enter your estimated cost here"></textarea>
-
-
-                    <button onClick={() => setPinEditWindowOpen(false)} className="pinEditSaveButton">Save</button>
-
-                </div>
-            </div>
-        );
-    }
-
-
-    const makeNewPin = () => {
-        const map = mapRef.current;
-        if (!map) return;
-
-        //add a pin at the current map center
-        const c = map.getCenter();
-
-        setPins((prev) => [...prev, [c.lat, c.lng]]);
+    const handleAddPin = (data: PinFormData) => {
+        addPinAtCenter(mapRef.current, setPins, data);
     };
 
-    const toggleDraggable = useCallback(() => {
-        setDraggable((d) => !d)
-    }, [])
+
+    const togglePinDraggable = (id: string) => {
+        setPins(prev =>
+            prev.map(p => (p.id === id ? { ...p, draggable: !p.draggable } : p))
+        );
+    };
 
 
 
@@ -95,6 +54,8 @@ const Map = () => {
 
         <div className="relative w-screen h-screen m-0 p-0">
             <MapContainer
+                keyboard={false}
+                ref={mapRef}
                 center={[51.505, -0.09]}
                 zoom={10}
                 scrollWheelZoom={false}
@@ -123,40 +84,41 @@ const Map = () => {
                 </Marker>
 
 
-                {/* Make new pins from button */}
-                {pins.map((pos, i) => (
-                    <Marker key={i}
-                            position={pos}
-                            icon={leafletIcon}
-                            draggable={draggable}>
-                        {/*<Popup>Pin #{i + 1}</Popup>     */}
+                {/* Place the pins on the map */}
+                {pins.map((pin) => (
+                    <Marker key={pin.id} position={pin.position} icon={leafletIcon} draggable={pin.draggable}>
                         <Popup minWidth={30}>
-                            <span onClick={toggleDraggable}>
-                                {draggable
-                                    ? 'Lock Pin'
-                                    : 'Unlock Pin'}
-                            </span>
+                            <strong>{pin.location}</strong><br />
+                            {`Review: ${pin.review}`}<br />
+                            {`Cost: $${pin.cost}`}
+
+                            <div style={{ marginTop: 8 }}>
+                                <span onClick={() => togglePinDraggable(pin.id)} style={{ cursor: 'pointer', textDecoration: 'underline' }}>
+                                    {pin.draggable ? 'Lock Pin' : 'Unlock Pin'}
+                                </span>
+                            </div>
                         </Popup>
                     </Marker>
                 ))}
 
 
-                <SearchBar />
-
-
-            </MapContainer>
-
-            <button onClick={makeNewPin} className="mapButton">Add Pin</button>
-            <button onClick={() => setPinEditWindowOpen(true)} className="pinEditButton">Edit Pin</button>
-            {pinEditWindowOpen && <PinEditWindow />}
-
             {/* absolutely position the buttons at the bottom */}
-            <div className="absolute bottom-4 left-0 w-full flex justify-center">
-                <ButtonLayout />
-            </div>
+                <div className="absolute bottom-4 left-0 w-full flex justify-center z-[650] pointer-events-none">
+                    <div className="flex flex-row items-center pointer-events-auto">
+                        <SearchBar />
+                        <ButtonLayout onAddPin={handleAddPin} />
+                    </div>
+                </div>
+
+
+        </MapContainer>
+
+
+
         </div>
     );
 };
+
 
 //if you want the header on top, remove absolute in the div above
 export default Map;

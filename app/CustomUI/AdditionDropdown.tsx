@@ -2,47 +2,67 @@ import { MarkerPin01 } from "@untitledui/icons";
 import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/button-group";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
 import AdditionIcon from "@/app/CustomUI/Icons/AdditionIcon";
-import React from "react";
+import {PinDetailsMenu, PinFormData} from "@/app/CustomUI/PinMenu";
+import React, { useState } from 'react';
+
+
 
 
 type DropdownItemProps = {
     picture: React.FunctionComponent<{ className?: string }>;
     text: string;
+    onClick?: () => void;
 };
 
-const DropdownItem = (props: DropdownItemProps) => {
-    const picture = props.picture;
-    const text = props.text;
+type AdditionButtonProps = {
+    onAddPin: (data: PinFormData) => void;
+};
 
+const DropdownItem = ({ picture, text, onClick }: DropdownItemProps) => {
     return (
-        <Dropdown.Item className="text-center" icon={picture}>
+        <Dropdown.Item
+            icon={picture}
+            onClick={onClick}                  // ← forward it
+            className="text-center cursor-pointer"
+        >
             {text}
         </Dropdown.Item>
-    )
-}
+    );
+};
 
-export const AdditionButton = () => {
 
+export const AdditionButton = ({ onAddPin }: AdditionButtonProps) => {
+    const [open, setOpen] = useState(false);
+
+    const handleAddPinFromMenu = (data: PinFormData) => {
+        onAddPin(data);          // send data up to Map
+    };
 
 
     return(
+        <>
             <Dropdown.Root>
                 <ButtonGroup>
                     <ButtonGroupItem className="hover:bg-amber-200"  iconTrailing={AdditionIcon} id='add'> </ButtonGroupItem>
                 </ButtonGroup>
+
                 <Dropdown.Popover placement="top">
                     <Dropdown.Menu>
-                        <Dropdown.Item isDisabled={true} className="flex justify-center gap-3 border-b cursor-default border-secondary">
-                            Actions
-                        </Dropdown.Item>
-                    </Dropdown.Menu>
-                    <Dropdown.Menu>
                         <Dropdown.Section>
-                            <DropdownItem picture={MarkerPin01} text={"Add New Marker"}/>
+                            <DropdownItem
+                                picture={MarkerPin01}
+                                text={"Add New Pin"}
+                                onClick={() => setOpen(true)}
+                            />
                         </Dropdown.Section>
                     </Dropdown.Menu>
                 </Dropdown.Popover>
             </Dropdown.Root>
-
+            <PinDetailsMenu
+                onAddPin={handleAddPinFromMenu}
+                open={open}
+                onClose={() => setOpen(false)}
+            />
+        </>
     );
 }
