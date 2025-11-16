@@ -15,15 +15,12 @@ const SignInForm = () => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
-    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
-    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
-
-
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setError("");
 
-        if (!email || !password) {
+        console.log("credentials: ",email, password);
+        if (!password || !email) {
             setError("Please enter credentials");
         } else {
             const result = await authClient.signIn.email({
@@ -52,7 +49,7 @@ const SignInForm = () => {
         });
 
         if (result.error) {
-
+            setError(result.error.message || "Login failed. Please try again.");
         } else {
             console.log(result.data);
         }
@@ -60,31 +57,29 @@ const SignInForm = () => {
 
     return(
         <div className="grid gap-4">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSignIn}>
                 <div className="grid gap-3 pb-5">
-                    <p className="text-gray-500 size-4 text-nowrap">Email *</p>
-                    <input
-                        className="h-10 w-full border border-gray-300 rounded-md selected:border-gray-300"
-                        placeholder="  email@findyourway.com"
+                    <Input
+                        isRequired
+                        label="Email"
+                        placeholder="email@findyourway.com"
                         type="email"
                         value={email}
-                        name="email"
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={setEmail}
                     />
                 </div>
                 <div className="grid gap-3 pb-5">
-                    <p className="text-gray-500 size-4 text-nowrap">Password *</p>
-                    <input
-                        className="h-10 w-full border border-gray-300 rounded-md "
+                    <Input
+                        isRequired
+                        label="Password"
                         name="password"
-                        placeholder="  abcd-1234"
+                        placeholder="abcd-1234"
                         type="password"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-
+                        onChange={setPassword}
                     />
                 </div>
-                <Button className="w-full" color="primary" size="lg" iconLeading={AtSign}>Sign In With Email</Button>
+                <Button type="submit" className="w-full" color="primary" size="lg" iconLeading={AtSign}>Sign In With Email</Button>
             </form>
             <p className="text-center text-red-400">{error}</p>
             <Divider textAlign="center">OR</Divider>
@@ -102,22 +97,86 @@ const RegisterForm = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [retype, setRetype] = useState("");
+    const [error, setError] = useState("");
+
+    const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setError("");
+
+
+        console.log("credentials: ",email, password);
+        if (!password || !email) {
+            setError("Please enter credentials");
+        } else {
+            const result = await authClient.signUp.email({
+                name: username,
+                email: email,
+                password: password,
+                callbackURL: "/",
+            });
+
+            if (result.error) {
+                setError(result.error.message || "Login failed. Please try again.");
+            } else {
+                console.log(result);
+            }
+        }
+    };
 
     return (
         <div className="grid gap-4">
-            <div className="grid gap-3">
-                <Input isRequired label="Username" placeholder="Mr.FindYourWay"/>
+            <form onSubmit={handleSignUp}>
+            <div className="grid gap-3 pb-5">
+                <Input
+                    isRequired
+                    label="Username"
+                    placeholder="MrFindYourWay"
+                    type="text"
+                    value={username}
+                    onChange={setUsername}
+                />
             </div>
-            <div className="grid gap-3">
-                <Input isRequired label="Email" placeholder="email@findyourway.com"/>
+            <div className="grid gap-3 pb-5">
+                <Input
+                    isRequired
+                    label="Email"
+                    placeholder="email@findyourway.com"
+                    type="email"
+                    value={email}
+                    onChange={setEmail}
+                />
             </div>
-            <div className="grid gap-3">
-                <Input isRequired label="Password" placeholder="password"/>
+            <div className="grid gap-3 pb-5">
+                <Input
+                    isRequired
+                    label="Password"
+                    placeholder="password"
+                    type="password"
+                    value={password}
+                    onChange={setPassword}
+                />
             </div>
-            <div className="grid gap-3">
-                <Input isRequired label="Re-Type Password" placeholder="re-type password"/>
+            <div className="grid gap-3 pb-5">
+                <Input
+                    isRequired
+                    label="Re-Type Password"
+                    placeholder="re-type password"
+                    type="password"
+                    value={retype}
+                    onChange={setRetype}
+                />
             </div>
-            <Button color="primary" size="lg" iconLeading={Globe05}>Start Travelling!</Button>
+            <Button
+                color="primary"
+                className="w-full"
+                size="lg"
+                iconLeading={Globe05}
+                type="submit"
+            >
+                Start Travelling!
+            </Button>
+                <p className="text-center text-red-400">{error}</p>
+            </form>
         </div>
 
     )}
