@@ -33,9 +33,7 @@ export const ButtonGroupButtonItem = ({ id, buttonName, title, dialogForm }: But
                         {title}
                     </DialogTitle>
                 </DialogHeader>
-                <form>
                     {dialogForm}
-                </form>
             </DialogContent>
         </Dialog>
     );

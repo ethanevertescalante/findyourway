@@ -2,7 +2,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Icon } from 'leaflet';
-import ButtonLayout from "@/app/CustomUI/Buttons/ButtonLayout";
+import ButtonLayout from "@/app/CustomUI/ButtonLayout";
 import markerIconPng from "leaflet/dist/images/marker-icon.png"
 import {LoginButtons} from "@/app/CustomUI/Buttons/LoginButtons";
 
