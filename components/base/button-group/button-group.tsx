@@ -17,8 +17,7 @@ export const styles = sortCx({
             // Hover and focus styles
             "hover:bg-primary_hover hover:text-secondary_hover focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2",
             // Disabled styles
-            "disabled:cursor-not-allowed disabled:bg-primary disabled:text-disabled",
-            // Selected styles
+            "disabled:cursor-not-allowed disabled:bg-primary disabled:text-disabled", // Selected styles
             "selected:bg-active selected:text-secondary_hover selected:disabled:bg-disabled_subtle",
         ].join(" "),
         icon: "pointer-events-none text-fg-quaternary transition-[inherit] group-hover/button-group:text-fg-quaternary_hover group-disabled/button-group:text-fg-disabled_subtle",
