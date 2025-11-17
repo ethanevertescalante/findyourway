@@ -20,6 +20,9 @@ export type Pin = {
     draggable: boolean;
 };
 
+import {LoginButtons} from "@/app/CustomUI/Buttons/LoginButtons";
+
+
 const Map = () => {
 
     const [pins, setPins] = useState<Pin[]>([]);
