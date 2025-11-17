@@ -5,8 +5,8 @@ import MapIcon from "@/app/CustomUI/Icons/MapIcon";
 import DiscoverIcon from "@/app/CustomUI/Icons/DiscoverIcon";
 import SettingsIcon from "@/app/CustomUI/Icons/SettingsIcon";
 import SearchIcon from "@/app/CustomUI/Icons/SearchIcon";
-import {AdditionButton} from "@/app/CustomUI/AdditionDropdown";
-import Button from "./Button"
+import {AdditionButton} from "@/app/CustomUI/Dropdowns/AdditionDropdown";
+import Button from "./Buttons/Button"
 import type { PinFormData } from "./PinMenu"
 import SearchBar from "@/app/CustomUI/SearchBar";
 

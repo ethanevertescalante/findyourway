@@ -1,5 +1,5 @@
 'use client';
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import {TextField, Label, TextArea, Input, FieldError} from 'react-aria-components';
 
 export type PinFormData = {
@@ -10,12 +10,11 @@ export type PinFormData = {
 
 type Props = {
     open: boolean;
-    onClose: () => void;
-    onAddPin: (data: PinFormData) => void;
+    onCloseAction: () => void;
+    onAddPinAction: (data: PinFormData) => void;
 };
 
-export function PinDetailsMenu({ open, onClose, onAddPin }: Props) {
-    if (!open) return null;
+export function PinDetailsMenu({ open, onCloseAction, onAddPinAction }: Props) {
 
     const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -29,10 +28,11 @@ export function PinDetailsMenu({ open, onClose, onAddPin }: Props) {
             cost:     String(fd.get('cost') || ''),
         };
 
-        onAddPin(data);
-        onClose();
-    }, [onAddPin, onClose]);
+        onAddPinAction(data);
+        onCloseAction();
+    }, [onAddPinAction, onCloseAction]);
 
+    if (!open) return;
 
 
     return (
@@ -107,7 +107,7 @@ export function PinDetailsMenu({ open, onClose, onAddPin }: Props) {
 
                 <div className="flex justify-end gap-2 mt-4">
                     <button type="button"
-                            onClick={onClose}
+                            onClick={onCloseAction}
                             className="px-3 py-2 rounded-md border border-red-500 text-black disabled:opacity-50 hover:bg-gray-300">
                             Cancel
                     </button>

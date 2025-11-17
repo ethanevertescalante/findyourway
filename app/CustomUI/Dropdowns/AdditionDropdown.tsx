@@ -59,9 +59,9 @@ export const AdditionButton = ({ onAddPin }: AdditionButtonProps) => {
                 </Dropdown.Popover>
             </Dropdown.Root>
             <PinDetailsMenu
-                onAddPin={handleAddPinFromMenu}
+                onAddPinAction={handleAddPinFromMenu}
                 open={open}
-                onClose={() => setOpen(false)}
+                onCloseAction={() => setOpen(false)}
             />
         </>
     );
