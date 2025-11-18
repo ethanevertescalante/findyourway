@@ -13,26 +13,11 @@ html, body {
 @custom-variant label (& [data-label]);
 @custom-variant focus-input-within (&:has(input:focus));
 
-@utility scrollbar-hide {
-  /* For Webkit-based browsers (Chrome, Safari and Opera) */
-  &::-webkit-scrollbar {
-    display: none;
-    -webkit-appearance: none;
-  }
-
-  /* For IE, Edge and Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-@utility transition-inherit-all {
-  transition-property: inherit;
-  transition-duration: inherit;
-  transition-timing-function: inherit;
-}
-
-html,
-body {
+/* -------- Global base -------- */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -42,27 +27,295 @@ body {
   font-kerning: normal;
 }
 
-/* Hide the default expand arrow on Safari.  */
-details summary::-webkit-details-marker {
-  display: none;
+/* Utilities */
+@utility scrollbar-hide {
+  &::-webkit-scrollbar { display: none; -webkit-appearance: none; }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+@utility transition-inherit-all {
+  transition-property: inherit;
+  transition-duration: inherit;
+  transition-timing-function: inherit;
 }
 
-/* Hide default arrows from number inputs. */
-/* Chrome, Safari, Edge, Opera */
+/* Input defaults */
+details summary::-webkit-details-marker { display: none; }
 input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type="number"] { -moz-appearance: textfield; }
+input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; }
+
+/* -------- Map UI buttons -------- */
+.mapButton,
+.pinEditButton {
+  color: #000;
+  border: 2px solid rgba(200,200,200,.9);
+  background-color: #fff;
+  position: absolute;
+  left: 4%;
+  transform: translateX(-50%) translateY(+500%); /* lower this to get back the other missing button, its thrown off screen rn */
+  z-index: 1000;
+  padding: 8px 12px;
+  border-radius: 6px;
+  width: 100px;
 }
-/* Firefox */
-input[type="number"] {
-  -moz-appearance: textfield;
+.mapButton { top: 100px; }
+.pinEditButton { top: 150px; }
+.mapButton:hover,
+.pinEditButton:hover { color: #3c52b2; }
+
+
+/* -------- Pin edit panel --------
+.pinEditBox {
+  color: #000;
+  border: 2px solid rgba(200,200,200,.9);
+  background: #fff;
+  position: absolute; top: 220px; left: 11px; z-index: 2000;
+  width: min(500px, 90vw);
+  height: min(365px, 90vw);
+  display: flex; flex-direction: column; gap: 12px;
+}
+.pinEditBox-inner { color: #000; transform: translate(2%, -19%); }
+.pinEditBox-title {
+  font-weight: 600;
+  display: flex; justify-content: center; align-items: center;
+  transform: translateY(-290%);
+}
+.pinEditBox label { display: block; font-weight: 600; }
+.pinEditBox textarea {
+  width: 96%; box-sizing: border-box; padding: 8px; resize: none;
+}
+.pinEditExitButton,
+.pinEditSaveButton {
+  height: 23px;
+  border: 2px solid rgba(200,200,200,.9);
+  background: #fff;
+  padding: 10px; margin: 20px;
+  display: flex; justify-content: center; align-items: center;
+  z-index: 2000;
+}
+.pinEditExitButton { width: 20px; transform: translate(1890%, -90%); }
+.pinEditSaveButton { width: 70px; transform: translate(270%, -88%); }
+.pinEditExitButton:hover,
+.pinEditSaveButton:hover { color: #3c52b2; }
+
+*/
+
+
+.myGeocoder {
+  --btn-bg: #fafafa;
+  --btn-hover: 0.9;
+  --icon-color: #000;
+  --input-fg: #000;
+  --input-bg: #fff;
+  --input-border: #9ca3af;
+  --placeholder: #000;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+
+
 }
 
-/* Hide the default clear button (X) from search inputs. */
-input[type="search"]::-webkit-search-cancel-button {
-  -webkit-appearance: none;
+
+
+
+/* Input */
+.myGeocoder input[type="text"],
+.myGeocoder .leaflet-control-geocoder-form input {
+  color: var(--input-fg) !important;
+  -webkit-text-fill-color: var(--input-fg) !important;
+  caret-color: var(--input-fg) !important;
+  background: var(--input-bg) !important;
+  border-color: var(--input-border) !important;
+  z-index: 2000;
 }
+.myGeocoder input[type="text"]::placeholder { color: var(--placeholder) !important; opacity: 1; }
+.myGeocoder input[type="text"]:focus {
+  outline: none;
+  border-color: var(--btn-bg);
+  box-shadow: 0 0 0 3px rgba(255,255,255,.25);
+  z-index: 2000;
+}
+
+/* Expanded container */
+.myGeocoder.leaflet-control-geocoder-expanded {
+  background: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.08);
+
+  width: 260px;
+  margin-left: calc(-260px + 60px);
+
+  z-index: 2000;
+
+  box-sizing: border-box;
+}
+.myGeocoder .leaflet-control-geocoder-form {
+  position: relative;
+  margin: 0 !important;
+  padding: 6px 8px;
+  background: var(--input-bg) !important;
+  border-radius: 8px;
+  z-index: 2000;
+  overflow: hidden;
+}
+
+/* Toggle / button (collapsed state) */
+.myGeocoder .leaflet-control-geocoder-icon,
+.myGeocoder .leaflet-bar a {
+  width: 60px !important;
+  height: 45px !important;
+  line-height: 45px !important;
+  border-radius: 8px;
+  background-color: var(--btn-bg) !important;
+  background-image: none !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  color: #000 !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  cursor: pointer;
+  z-index: 2000;
+  transition: background-color 0.15s ease;
+}
+
+
+
+.myGeocoder .leaflet-control-geocoder-icon:hover,
+.myGeocoder .leaflet-bar a:hover {
+  background-color: #e5e5e5 !important;
+  filter: none !important;
+}
+
+
+
+/* Custom glyph via mask (centered in the button) */
+.myGeocoder .leaflet-control-geocoder-icon {
+  background-image: none !important; position: relative;
+  z-index: 2000;
+}
+.myGeocoder .leaflet-control-geocoder-icon::before {
+  content: ""; position: absolute; inset: 7px; margin: auto;
+  width: 32px; height: 32px; background: var(--icon-color);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M9 3.5a5.5 5.5 0 104.03 9.23l3.62 3.62a.75.75 0 101.06-1.06l-3.62-3.62A5.5 5.5 0 009 3.5zm-4 5.5a4 4 0 118 0 4 4 0 01-8 0z'/%3E%3C/svg%3E") no-repeat center / contain;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M9 3.5a5.5 5.5 0 104.03 9.23l3.62 3.62a.75.75 0 101.06-1.06l-3.62-3.62A5.5 5.5 0 009 3.5zm-4 5.5a4 4 0 118 0 4 4 0 01-8 0z'/%3E%3C/svg%3E") no-repeat center / contain;
+  pointer-events: none;
+  z-index: 2000;
+}
+
+/* Hide the toggle “tab” when expanded */
+.myGeocoder.leaflet-control-geocoder-expanded .leaflet-control-geocoder-icon,
+.myGeocoder.leaflet-control-geocoder-expanded .leaflet-bar-part {
+  display: none !important;
+  z-index: 2000;
+}
+
+/* Leaflet “bar” reset (container + items) */
+.leaflet-container .myGeocoder.leaflet-bar,
+.leaflet-container .myGeocoder.leaflet-bar a,
+.leaflet-container .myGeocoder .leaflet-bar-part {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  z-index: 2000;
+}
+
+/* results of search */
+.myGeocoder .leaflet-control-geocoder-alternatives {
+  position: absolute; bottom: 100%; top: auto; margin-bottom: 6px;
+  max-height: 40vh; overflow: auto; width: 100%;
+  box-sizing: border-box; z-index: 2000;
+  background: #fff !important; border: 1px solid #fff;
+  border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,.15);
+  line-height: 1.1 !important;
+
+}
+.myGeocoder .leaflet-control-geocoder-alternatives a {
+  display: block;
+  color: #000; text-decoration: none; background: transparent;
+  padding: 6px 6px;
+  z-index: 2000;
+}
+.myGeocoder .leaflet-control-geocoder-alternatives a * { color: inherit; }
+.myGeocoder .leaflet-control-geocoder-alternatives a .leaflet-control-geocoder-address,
+.myGeocoder .leaflet-control-geocoder-alternatives a .leaflet-control-geocoder-detail,
+.myGeocoder .leaflet-control-geocoder-alternatives a small,
+.myGeocoder .leaflet-control-geocoder-alternatives a .secondary { color: #6b7280; }
+.myGeocoder .leaflet-control-geocoder-alternatives li a:hover,
+.myGeocoder .leaflet-control-geocoder-alternatives li a:focus,
+.myGeocoder .leaflet-control-geocoder-selected { background: #f3f4f6 !important; }
+
+.myGeocoder .leaflet-control-geocoder-form { margin: 0 !important; padding: 6px 8px; z-index: 2000; }
+
+
+
+:root {
+  --geo-icon-dx: 0px;
+  --geo-icon-dy: 18px;
+}
+
+
+.myGeocoder .leaflet-control-geocoder-icon::before {
+  position: absolute;
+  left: calc(50% + var(--geo-icon-dx));
+  top:  calc(50% + var(--geo-icon-dy));
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 2000;
+
+}
+
+.myGeocoder.leaflet-control-geocoder-expanded .leaflet-control-geocoder-form {
+  border-radius: 0 !important;
+  background: transparent !important;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 6px 8px;
+}
+
+.myGeocoder.leaflet-control-geocoder-expanded
+.leaflet-control-geocoder-form input[type="text"] {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  width: 100%;
+  display: block;
+}
+
+.myGeocoder.leaflet-control-geocoder-expanded a.leaflet-control-geocoder-icon,
+.myGeocoder.leaflet-control-geocoder-expanded .leaflet-bar-part {
+  display: none !important;
+}
+
+.myGeocoder.leaflet-control-geocoder-expanded {
+  overflow: visible !important;
+  box-sizing: border-box;
+}
+
+
+
+
+.map-bottom-bar {
+  position: fixed;
+  left: 50%;
+  bottom: 40px;
+  transform: translateX(-50%); /* center horizontally */
+  z-index: 3000;
+}
+
+.myGeocoder.leaflet-bar {
+  background-color: var(--btn-bg) !important;
+  border-radius: 8px;
+}
+
+
+
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
