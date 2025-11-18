@@ -1,10 +1,12 @@
-'use client'
+
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Icon } from 'leaflet';
 import ButtonLayout from "@/app/CustomUI/ButtonLayout";
 import markerIconPng from "leaflet/dist/images/marker-icon.png"
 import {LoginButtons} from "@/app/CustomUI/Buttons/LoginButtons";
+import HeaderAuth from "@/app/CustomUI/HeaderAuth";
+
 
 
 const Map = () => {
@@ -38,11 +40,7 @@ const Map = () => {
                     </Popup>
                 </Marker>
             </MapContainer>
-
-            <div className="flex justify-end pt-4 pr-4">
-                   <LoginButtons/>
-                {/*<AvatarDropdown/>*/}
-            </div>
+            <HeaderAuth />
             <div className="absolute bottom-4 left-0 w-full flex justify-center">
                 <ButtonLayout />
             </div>

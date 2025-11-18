@@ -8,50 +8,60 @@ import {AtSign} from "lucide-react";
 import {Globe05} from "@untitledui/icons";
 import {authClient} from "@/app/lib/auth-client";
 import {FormEvent, useState} from "react";
+import useSWRMutation from "swr/mutation";
+import {useRouter} from "next/navigation";
 
+async function fetcher(url: string) {
+    return fetch(url).then(r => r.json());
+}
 
 const SignInForm = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const router = useRouter();
 
     const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setError("");
 
-        console.log("credentials: ",email, password);
+        // console.log("credentials: ", email, password);
+
         if (!password || !email) {
             setError("Please enter credentials");
-        } else {
-            const result = await authClient.signIn.email({
-                email: email,
-                password: password,
-                callbackURL: "/",
-            });
+            return;
+        }
 
-            if (result.error) {
-                setError(result.error.message || "Login failed. Please try again.");
-            } else {
-                console.log(result);
-            }
+        const result = await authClient.signIn.email({
+            email,
+            password,
+            callbackURL: "/",
+        });
+
+        if (result.error) {
+            setError(result.error.message || "Login failed. Please try again.");
+        } else {
+            console.log(result);
+            router.refresh();
+
         }
     };
-
 
     const handleGoogleSubmit = async (
         event: FormEvent<HTMLFormElement>,
     ) => {
         event.preventDefault();
         setError("");
+
         const result = await authClient.signIn.social({
             provider: "google",
-            callbackURL: "/profile",
+            callbackURL: "/",
         });
 
         if (result.error) {
             setError(result.error.message || "Login failed. Please try again.");
         } else {
-            console.log(result.data);
+            router.refresh();
         }
     };
 
@@ -98,30 +108,53 @@ const RegisterForm = () => {
     const [password, setPassword] = useState("");
     const [retype, setRetype] = useState("");
     const [error, setError] = useState("");
+    const router = useRouter();
+
+    const { isMutating } = useSWRMutation(
+        username ? `/api/checkusername/${encodeURIComponent(username)}` : null,
+        fetcher
+    );
 
     const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setError("");
 
+        const res = await fetch(`/api/checkusername/${encodeURIComponent(username)}`);
+        const data = await res.json();
 
-        console.log("credentials: ",email, password);
-        if (!password || !email) {
-            setError("Please enter credentials");
+        if (!username || !email || !password || !retype) {
+            setError("Please Enter All Credentials");
+        } else if (!res.ok) {
+            setError(data.message);
+        } else if (password !== retype) {
+            setError("Passwords don't match");
         } else {
             const result = await authClient.signUp.email({
+                email,
+                password,
                 name: username,
-                email: email,
-                password: password,
-                callbackURL: "/",
             });
 
             if (result.error) {
-                setError(result.error.message || "Login failed. Please try again.");
+                setError(result.error.message || "SignUp failed. Please try again.");
             } else {
-                console.log(result);
+                const result = await authClient.signIn.email({
+                    email,
+                    password,
+                    callbackURL: "/",
+                });
+
+                if (result.error) {
+                    setError(result.error.message || "Login failed. Please try again.");
+                } else {
+                    console.log(result);
+                    router.refresh();
+
+                }
             }
         }
     };
+
 
     return (
         <div className="grid gap-4">
@@ -172,6 +205,7 @@ const RegisterForm = () => {
                 size="lg"
                 iconLeading={Globe05}
                 type="submit"
+                disabled={ isMutating }
             >
                 Start Travelling!
             </Button>
