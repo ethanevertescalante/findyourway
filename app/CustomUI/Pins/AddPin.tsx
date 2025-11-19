@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction } from "react";
 import type { Map as LeafletMap } from "leaflet";
-import type { Pin } from "./Map";
+import type { Pin } from "../Map";
 import type { PinFormData } from "./PinMenu"
 
 
