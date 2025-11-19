@@ -20,10 +20,6 @@ export type Pin = {
 };
 
 
-
-
-
-
 const Map = () => {
 
     const [pins, setPins] = useState<Pin[]>([]);

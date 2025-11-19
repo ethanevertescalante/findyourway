@@ -5,9 +5,6 @@ import AdditionIcon from "@/app/CustomUI/Icons/AdditionIcon";
 import {PinDetailsMenu, PinFormData} from "@/app/CustomUI/Pins/PinMenu";
 import React, { useState } from 'react';
 
-
-
-
 type DropdownItemProps = {
     picture: React.FunctionComponent<{ className?: string }>;
     text: string;
