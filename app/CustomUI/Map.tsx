@@ -1,14 +1,15 @@
 'use client'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Icon, Map as LeafletMap } from 'leaflet';
+import { Icon, Map as LeafletMap, LatLng } from 'leaflet';
 import ButtonLayout from "@/app/CustomUI/ButtonLayout";
 import markerIconPng from "leaflet/dist/images/marker-icon.png"
-import {useRef, useState, useMemo} from "react";
+import {useRef, useState, useMemo, useEffect, useCallback} from "react";
 import SearchBar from './SearchBar';
-import { addPinAtCenter } from "./Pins/AddPin";
-import type { PinFormData } from "./Pins/PinMenu"
-import HeaderAuth from "@/app/CustomUI/HeaderAuth";
+import { addPinAtCenter } from "./AddPin";
+import type { PinFormData } from "./PinMenu"
+
+
 
 export type Pin = {
     id: string;
@@ -19,9 +20,7 @@ export type Pin = {
     draggable: boolean;
 };
 
-
-
-
+import {LoginButtons} from "@/app/CustomUI/Buttons/LoginButtons";
 
 
 const Map = () => {
@@ -116,7 +115,6 @@ const Map = () => {
 
 
         </MapContainer>
-        <HeaderAuth/>
 
 
 
