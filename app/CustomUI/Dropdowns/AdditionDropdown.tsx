@@ -2,7 +2,7 @@ import { MarkerPin01 } from "@untitledui/icons";
 import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/button-group";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
 import AdditionIcon from "@/app/CustomUI/Icons/AdditionIcon";
-import {PinDetailsMenu, PinFormData} from "@/app/CustomUI/PinMenu";
+import {PinDetailsMenu, PinFormData} from "@/app/CustomUI/Pins/PinMenu";
 import React, { useState } from 'react';
 
 
