@@ -6,214 +6,38 @@ import Divider from '@mui/material/Divider';
 import {SocialButton} from "@/components/base/buttons/social-button";
 import {AtSign} from "lucide-react";
 import {Globe05} from "@untitledui/icons";
-import {authClient} from "@/app/lib/auth-client";
-import {FormEvent, useState} from "react";
-import useSWRMutation from "swr/mutation";
-import {useRouter} from "next/navigation";
 
-async function fetcher(url: string) {
-    return fetch(url).then(r => r.json());
-}
 
-const SignInForm = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-    const router = useRouter();
-
-    const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        setError("");
-
-        // console.log("credentials: ", email, password);
-
-        if (!password || !email) {
-            setError("Please enter credentials");
-            return;
-        }
-
-        const result = await authClient.signIn.email({
-            email,
-            password,
-            callbackURL: "/",
-        });
-
-        if (result.error) {
-            setError(result.error.message || "Login failed. Please try again.");
-        } else {
-            console.log(result);
-            router.refresh();
-
-        }
-    };
-
-    const handleGoogleSubmit = async (
-        event: FormEvent<HTMLFormElement>,
-    ) => {
-        event.preventDefault();
-        setError("");
-
-        const result = await authClient.signIn.social({
-            provider: "google",
-            callbackURL: "/",
-        });
-
-        if (result.error) {
-            setError(result.error.message || "Login failed. Please try again.");
-        } else {
-            router.refresh();
-        }
-    };
-
-    return(
+const SignInForm = () => (
         <div className="grid gap-4">
-            <form onSubmit={handleSignIn}>
-                <div className="grid gap-3 pb-5">
-                    <Input
-                        isRequired
-                        label="Email"
-                        placeholder="email@findyourway.com"
-                        type="email"
-                        value={email}
-                        onChange={setEmail}
-                    />
-                </div>
-                <div className="grid gap-3 pb-5">
-                    <Input
-                        isRequired
-                        label="Password"
-                        name="password"
-                        placeholder="abcd-1234"
-                        type="password"
-                        value={password}
-                        onChange={setPassword}
-                    />
-                </div>
-                <Button type="submit" className="w-full" color="primary" size="lg" iconLeading={AtSign}>Sign In With Email</Button>
-            </form>
-            <p className="text-center text-red-400">{error}</p>
+            <div className="grid gap-3">
+                <Input isRequired label="Email" placeholder="email@findyourway.com"/>
+            </div>
+            <div className="grid gap-3">
+                <Input isRequired label="Password" placeholder="abcd-1234"/>
+            </div>
+            <Button color="primary" size="lg" iconLeading={AtSign}>Sign In With Email</Button>
             <Divider textAlign="center">OR</Divider>
-            <form onSubmit={handleGoogleSubmit}>
-                <SocialButton className="w-full" type={"submit"} social={"google"}>Sign In With Google</SocialButton>
-            </form>
-        </div>
-    )
-}
-
-
-
-const RegisterForm = () => {
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [retype, setRetype] = useState("");
-    const [error, setError] = useState("");
-    const router = useRouter();
-
-    const { isMutating } = useSWRMutation(
-        username ? `/api/checkusername/${encodeURIComponent(username)}` : null,
-        fetcher
-    );
-
-    const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        setError("");
-
-        const res = await fetch(`/api/checkusername/${encodeURIComponent(username)}`);
-        const data = await res.json();
-
-        if (!username || !email || !password || !retype) {
-            setError("Please Enter All Credentials");
-        } else if (!res.ok) {
-            setError(data.message);
-        } else if (password !== retype) {
-            setError("Passwords don't match");
-        } else {
-            const result = await authClient.signUp.email({
-                email,
-                password,
-                name: username,
-            });
-
-            if (result.error) {
-                setError(result.error.message || "SignUp failed. Please try again.");
-            } else {
-                const result = await authClient.signIn.email({
-                    email,
-                    password,
-                    callbackURL: "/",
-                });
-
-                if (result.error) {
-                    setError(result.error.message || "Login failed. Please try again.");
-                } else {
-                    console.log(result);
-                    router.refresh();
-
-                }
-            }
-        }
-    };
-
-
-    return (
-        <div className="grid gap-4">
-            <form onSubmit={handleSignUp}>
-            <div className="grid gap-3 pb-5">
-                <Input
-                    isRequired
-                    label="Username"
-                    placeholder="MrFindYourWay"
-                    type="text"
-                    value={username}
-                    onChange={setUsername}
-                />
-            </div>
-            <div className="grid gap-3 pb-5">
-                <Input
-                    isRequired
-                    label="Email"
-                    placeholder="email@findyourway.com"
-                    type="email"
-                    value={email}
-                    onChange={setEmail}
-                />
-            </div>
-            <div className="grid gap-3 pb-5">
-                <Input
-                    isRequired
-                    label="Password"
-                    placeholder="password"
-                    type="password"
-                    value={password}
-                    onChange={setPassword}
-                />
-            </div>
-            <div className="grid gap-3 pb-5">
-                <Input
-                    isRequired
-                    label="Re-Type Password"
-                    placeholder="re-type password"
-                    type="password"
-                    value={retype}
-                    onChange={setRetype}
-                />
-            </div>
-            <Button
-                color="primary"
-                className="w-full"
-                size="lg"
-                iconLeading={Globe05}
-                type="submit"
-                disabled={ isMutating }
-            >
-                Start Travelling!
-            </Button>
-                <p className="text-center text-red-400">{error}</p>
-            </form>
+            <SocialButton social={"google"}>Sign In With Google</SocialButton>
         </div>
 
-    )}
+)
+
+const RegisterForm = () => (
+    <div className="grid gap-4">
+        <div className="grid gap-3">
+            <Input isRequired label="Email" placeholder="email@findyourway.com"/>
+        </div>
+        <div className="grid gap-3">
+            <Input isRequired label="Password" placeholder="password"/>
+        </div>
+        <div className="grid gap-3">
+            <Input isRequired label="Re-Type Password" placeholder="re-type password"/>
+        </div>
+        <Button color="primary" size="lg" iconLeading={Globe05}>Start Travelling!</Button>
+    </div>
+
+)
 
 
 
