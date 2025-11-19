@@ -82,4 +82,5 @@ model Pin {
   updatedAt DateTime @updatedAt
 
   @@index([userId])
+  @@map("pin")
 }
