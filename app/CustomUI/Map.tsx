@@ -78,9 +78,6 @@ const Map = () => {
                         })
                     }
                 >
-                    <Popup closeOnEscapeKey={true}>
-                        A pretty CSS3 popup. <br /> Easily customizable.
-                    </Popup>
                 </Marker>
 
 
