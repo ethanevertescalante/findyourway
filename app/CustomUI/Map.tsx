@@ -66,21 +66,6 @@ const Map = () => {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <Marker
-                    position={[51.505, -0.09]}
-                    icon={
-                        new Icon({
-                            // @ts-expect-error icon string issue, nothing to worry about
-                            iconUrl: markerIconPng,
-                            iconSize: [25, 41],
-                            iconAnchor: [12, 41],
-                            popupAnchor: [0, -30],
-                        })
-                    }
-                >
-                </Marker>
-
-
                 {/* Place the pins on the map */}
                 {pins.map((pin) => (
                     <Marker key={pin.id} position={pin.position} icon={leafletIcon} draggable={pin.draggable}>
