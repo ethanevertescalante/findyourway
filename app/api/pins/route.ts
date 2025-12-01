@@ -203,3 +203,38 @@ export async function PATCH(request: Request) {
         );
     }
 }
+
+export async function DELETE(request: Request) {
+    try {
+        const session = await auth.api.getSession({ headers: request.headers });
+
+        if (!session) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        const { id } = await request.json();
+
+        if (!id) {
+            return NextResponse.json(
+                { error: "id is required" },
+                { status: 400 }
+            );
+        }
+
+        const existing = await prisma.pin.findUnique({
+            where: { id },
+            select: { userId: true },
+        });
+
+        if (!existing || existing.userId !== session.user.id) {
+            return NextResponse.json({ error: "Not found" }, { status: 404 });
+        }
+
+        await prisma.pin.delete({ where: { id } });
+
+        return NextResponse.json({ success: true });
+    } catch (err) {
+        console.error(err);
+        return NextResponse.json({ error: "Server error" }, { status: 500 });
+    }
+}

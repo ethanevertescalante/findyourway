@@ -37,5 +37,5 @@ export async function addPinAtCenter(
         console.log("Created pin:", data);
         // setPins(data.pins);
     };
-    createPin();
+    await createPin();
 }

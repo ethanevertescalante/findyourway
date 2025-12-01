@@ -36,19 +36,19 @@ const Map = () => {
     }, []);
 
     useEffect(() =>  {
-        fetchPins();
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        fetchPins().then(r => r);
     }, [fetchPins]);
 
-    const handleUpdatePin = async (updatedPin: Pin) => {
+    type PinUpdate = Partial<Pin> & { id: string };
+    const handleUpdatePin = async (updatedPin: PinUpdate) => {
         await fetch(`/api/pins/`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(updatedPin),
         });
 
-        setPins(prev =>
-            prev.map(p => (p.id === updatedPin.id ? updatedPin : p))
-        );
+        setPins(prev => prev.map(pin => pin.id === updatedPin.id ? { ...pin, ...updatedPin } : pin));
     };
 
 
@@ -69,6 +69,17 @@ const Map = () => {
         await fetchPins()
     };
 
+    const handleDeletePin = async (id: string) => {
+        await fetch("/api/pins", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id }),
+        });
+
+        setPins(prev => prev.filter(p => p.id !== id));
+    };
+
+
     // const togglePinDraggable = (id: string) => {
     //     setPins(prev =>
     //         prev.map(p => (p.id === id ? { ...p, draggable: !p.draggable } : p))
@@ -83,7 +94,7 @@ const Map = () => {
                 keyboard={false}
                 ref={mapRef}
                 center={[51.505, -0.09]}
-                zoom={6}
+                zoom={3}
                 scrollWheelZoom={false}
                 doubleClickZoom={true}
                 style={{ width: '100%', height: '100%', position: 'fixed', top: 0, left: 0 }}
@@ -92,6 +103,7 @@ const Map = () => {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
+                
                 {Array.isArray(pins) ? (
                     <div>
                         {pins.map((pin) => (
@@ -100,11 +112,13 @@ const Map = () => {
                                 pin={pin}
                                 icon={leafletIcon}
                                 onUpdate={handleUpdatePin}
+                                onDelete={handleDeletePin}
                             />
                         ))}
                     </div>
                 ) : (<p>you should not see this</p>)}
-            {/* absolutely position the buttons at the bottom */}
+
+                {/* absolutely position the buttons at the bottom */}
                 <div className="absolute bottom-4 left-0 w-full flex justify-center z-[650] pointer-events-none">
                     <div className="flex flex-row items-center pointer-events-auto">
                         <SearchBar />

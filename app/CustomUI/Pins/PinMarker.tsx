@@ -8,10 +8,11 @@ import getPinLocation from "@/app/CustomUI/Pins/getPinLocation";
 type PinMarkerProps = {
     pin: Pin;
     icon: Icon;
-    onUpdate: (updated: Partial<Pin> & { id: string }) => Promise<void>;
+    onUpdate: (updatedPin: Partial<Pin> & { id: string }) => Promise<void>;
+    onDelete: (id: string) => Promise<void>;
 };
 
-export function PinMarker({ pin, icon, onUpdate }: PinMarkerProps) {
+export function PinMarker({ pin, icon, onUpdate, onDelete }: PinMarkerProps) {
     const [position, setPosition] = useState<[number, number]>([pin.lat, pin.lng]);
     const [isEditingPos, setIsEditingPos] = useState(false);
 
@@ -21,17 +22,15 @@ export function PinMarker({ pin, icon, onUpdate }: PinMarkerProps) {
 
     // Keep local position and placeName in sync when pin changes from outside
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setPosition([pin.lat, pin.lng]);
-
         let cancelled = false;
-
         (async () => {
             const name = await getPinLocation(pin.lat, pin.lng);
             if (!cancelled) {
                 setPlaceName(name);
             }
         })();
-
         return () => {
             cancelled = true;
         };
@@ -67,6 +66,11 @@ export function PinMarker({ pin, icon, onUpdate }: PinMarkerProps) {
         setIsEditingPos(true);
     };
 
+    const handleDeleteMarker = async () => {
+        await onDelete(pin.id);
+    }
+
+
     return (
         <Marker
             key={pin.id}
@@ -77,40 +81,56 @@ export function PinMarker({ pin, icon, onUpdate }: PinMarkerProps) {
                 dragend: handleDragEnd,
             }}
         >
-            <Popup minWidth={500}>
-                <strong>{placeName || `${position[0]}, ${position[1]}`}</strong>
-                <br />
-                <label>
-                    Review:
-                    <br />
-                    <textarea
-                        value={review}
-                        onChange={(e) => setReview(e.target.value)}
-                        rows={3}
-                        style={{ width: "100%" }}
-                    />
-                </label>
-                <br />
-                <label>
-                    Cost:
-                    <br />
-                    <input
-                        value={cost}
-                        onChange={(e) => setCost(e.target.value)}
-                        style={{ width: "100%" }}
-                    />
-                </label>
-
-                <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
-                    {!isEditingPos ? (
-                        <button onClick={handleStartEdit}>Edit position</button>
-                    ) : (
-                        <>
-                            <button onClick={handleSave}>Save / Lock</button>
-                            <button onClick={handleCancelEdit}>Cancel</button>
-                        </>
-                    )}
+            <Popup className="flex flex-col" minWidth={0} maxWidth={Infinity}>
+                <div className="italic border-2 rounded-tl-2xl rounded-tr-2xl whitespace-nowrap highli bg-blue-400 text-white font-bold px-2 py-1">
+                    {placeName}
+                    <div className="text-[10px] text-gray-300">
+                        ({position[0]}, {position[1]})
+                    </div>
                 </div>
+
+                <div className="bg-green-400 text-white px-2 py-1 border-l-2 border-r-2 flex items-center gap-1">
+                    <span className="font-bold italic">Cost:</span>
+
+                    <div className="flex items-center">
+                        <span>$</span>
+
+                        {isEditingPos ? (
+                            <input
+                                value={cost}
+                                onChange={(e) => setCost(e.target.value)}
+                                className="bg-white w-fit rounded-2xl text-black px-1"
+                            />
+                        ) : (
+                            <span className="text-nowrap">{cost}</span>
+                        )}
+                    </div>
+                </div>
+
+
+                <p className="font-bold italic border-2 text-white bg-purple-400 px-2 py-1">Comments:</p>
+                <textarea
+                    className={`${!isEditingPos ? "bg-gray-400 text-white" : "bg-white"} w-full border-l-2 border-r-2 border-b-2 rounded-br-2xl rounded-bl-2xl px-2 py-1`}
+                    value={review}
+                    rows={5}
+                    disabled={!isEditingPos}
+                    onChange={e => setReview(e.target.value)}
+                />
+
+                {!isEditingPos ? (
+                    <div className="flex flex-row justify-between items-center">
+                        <button className="underline text-blue-900 cursor-pointer bg-blue-300 rounded-full w-1/2 font-bold italic" onClick={handleStartEdit}>Edit Position/Content</button>
+                        <button className="underline text-red-900 cursor-pointer bg-red-300 rounded-full w-1/3 font-bold italic" onClick={handleDeleteMarker}>Delete Marker</button>
+                    </div>
+
+                ) : (
+                    <div className="flex flex-row justify-between items-center">
+                        <button className="underline text-blue-900 cursor-pointer bg-blue-300 rounded-full w-1/2 font-bold italic" onClick={handleSave}>Save/Lock Marker </button>
+                        <button className="underline text-yellow-900 cursor-pointer bg-yellow-300 rounded-full w-1/3 font-bold italic" onClick={handleCancelEdit}>Cancel</button>
+                    </div>
+                )}
+
+
             </Popup>
         </Marker>
     );
