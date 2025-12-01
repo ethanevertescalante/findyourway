@@ -1,20 +1,23 @@
-import type { Key } from 'react-aria'
+import type { Key } from 'react-aria';
 import { ButtonGroup } from "@/components/base/button-group/button-group";
-import {useState} from "react";
+import { useState } from "react";
 import MapIcon from "@/app/CustomUI/Icons/MapIcon";
 import DiscoverIcon from "@/app/CustomUI/Icons/DiscoverIcon";
-import {AdditionButton} from "@/app/CustomUI/Dropdowns/AdditionDropdown";
-import Button from "./Buttons/Button"
-import type { PinFormData } from "./Pins/PinMenu"
-
+import { AdditionButton } from "@/app/CustomUI/Dropdowns/AdditionDropdown";
+import type { PinFormData } from "./Pins/PinMenu";
+import Button from "./Buttons/Button";
 
 type ButtonLayoutProps = {
     onAddPin: (data: PinFormData) => void;
+    onOpenTripBuilder: () => void;
+    onOpenSavedTrips: () => void;
 };
 
-
-export function ButtonLayout({ onAddPin }: ButtonLayoutProps) {
-
+export function ButtonLayout({
+                                 onAddPin,
+                                 onOpenTripBuilder,
+                                 onOpenSavedTrips,
+                             }: ButtonLayoutProps) {
     const [selectedKeys, setSelectedKeys] = useState<Set<Key>>(new Set(["map"]));
 
     return (
@@ -27,15 +30,20 @@ export function ButtonLayout({ onAddPin }: ButtonLayoutProps) {
                 selectionMode="single"
                 onSelectionChange={setSelectedKeys}
             >
-                <Button buttonName="FindYourWay" homeButton={true}/>
-                <Button picture={MapIcon} id="map" buttonName="Map"/>
-                <Button picture={DiscoverIcon} id="discover" buttonName="Discover"/>
+                <Button buttonName="FindYourWay" homeButton={true} />
+                <Button picture={MapIcon} id="map" buttonName="Map" />
+                <Button picture={DiscoverIcon} id="discover" buttonName="Discover" />
             </ButtonGroup>
+
             <ButtonGroup size="lg" className="pl-3" selectedKeys={[]}>
-                <AdditionButton onAddPin={onAddPin} />
+                <AdditionButton
+                    onAddPin={onAddPin}
+                    onOpenTripBuilder={onOpenTripBuilder}
+                    onOpenSavedTrips={onOpenSavedTrips}
+                />
             </ButtonGroup>
         </div>
-    )
+    );
 }
 
 export default ButtonLayout;
