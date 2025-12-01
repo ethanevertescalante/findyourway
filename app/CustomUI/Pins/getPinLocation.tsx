@@ -9,7 +9,7 @@ async function getPinLocation(lat: number, lng: number): Promise<string | null> 
     );
     const data = await res.json();
     const addr = data.address ?? {};
-    const main = data.name ?? addr.road;
+    const main = data.name || addr.road || "Area Around";
     const city = addr.city ?? addr.town ?? addr.village ?? "";
     const country = addr.country ?? "";
     const postcode = addr.postcode ?? "";
