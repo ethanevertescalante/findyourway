@@ -4,6 +4,7 @@ import { Marker, Popup } from "react-leaflet";
 import L, { Icon, LeafletEvent } from "leaflet";
 import type { Pin } from "../Map";
 import getPinLocation from "@/app/CustomUI/Pins/getPinLocation";
+import Link from "next/link";
 
 type PinMarkerProps = {
     pin: Pin;
@@ -70,6 +71,10 @@ export function PinMarker({ pin, icon, onUpdate, onDelete }: PinMarkerProps) {
         await onDelete(pin.id);
     }
 
+    const parts = (placeName ?? "").split(", ").filter(Boolean);
+    const city = parts[1] ?? "city";
+    const country = parts[2] ?? "";
+    const searchTerm = city + "," + country;
 
     return (
         <Marker
@@ -129,6 +134,12 @@ export function PinMarker({ pin, icon, onUpdate, onDelete }: PinMarkerProps) {
                         <button className="underline text-yellow-900 cursor-pointer bg-yellow-300 rounded-full w-1/3 font-bold italic" onClick={handleCancelEdit}>Cancel</button>
                     </div>
                 )}
+                <div className="pt-3 flex flex-row justify-start items-center gap-3 ">
+                        <Link target="_blank" href={`https://www.google.com/search?q=${searchTerm}`} className="text-center underline text-green-900 cursor-pointer bg-green-300 rounded-full w-1/3 font-bold italic">Area Search</Link>
+                        <Link target="_blank" href={`https://www.expedia.com/Hotel-Search?destination=${searchTerm}`} className="text-center underline text-blue-900 cursor-pointer bg-yellow-300 rounded-full w-1/3 font-bold italic">Hotel Search</Link>
+                        <Link target="_blank" href={`https://www.airbnb.com/s/${searchTerm}/experiences`} className="text-center underline text-white cursor-pointer bg-purple-300 rounded-full w-1/3 font-bold italic">Activity Search</Link>
+                </div>
+
 
 
             </Popup>
