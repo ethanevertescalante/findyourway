@@ -2,8 +2,6 @@
 
 import React from "react";
 import type { Trip } from "./Map";
-import Button from "@/app/CustomUI/Buttons/Button";
-import displayTrip from "@/app/CustomUI/DisplayTrip";
 
 type SavedTripsPanelProps = {
     open: boolean;

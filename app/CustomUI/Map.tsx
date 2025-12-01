@@ -73,33 +73,6 @@ const Map = () => {
         );
     };
 
-    /*
-    const handleTrip = (pin: Pin) => {
-        setPinsForTrip(prevPins => {
-            const exists = prevPins.some(p => p.id === pin.id);
-
-            if (exists) {
-                // remove it
-                return prevPins.filter(p => p.id !== pin.id);
-            }
-
-            // add it
-            return [...prevPins, pin];
-        });
-    };
-
-    const existsInTrip = (pinToCheck: Pin): boolean => {
-
-        for (const pin of pinsForTrip) {
-            if (pin.id === pinToCheck.id) {
-                return true;
-            }
-        }
-        return false;
-    };
-
-     */
-
 
     const togglePinInTrip = (pin: Pin) => {
         setCurrentTripPins(prev => {
@@ -114,19 +87,6 @@ const Map = () => {
     const isInCurrentTrip = (pin: Pin): boolean =>
         currentTripPins.some(p => p.id === pin.id);
 
-
-    // 💾 save current trip
-    const saveCurrentTrip = (name: string) => {
-        if (!currentTripPins.length) return;
-
-        const newTrip: Trip = {
-            id: crypto.randomUUID(), // or Date.now().toString()
-            name,
-            pins: currentTripPins,
-        };
-
-        setSavedTrips(prev => [...prev, newTrip]);
-    };
 
     const clearCurrentTrip = () => {
         setCurrentTripPins([]);
@@ -165,29 +125,6 @@ const Map = () => {
         setCurrentTripPins([]);      // start fresh for this trip
         SetIsCreateTripNameOpen(false);
     };
-
-
-    /*
-        // persist saved trips in localStorage
-        useEffect(() => {
-            if (typeof window === "undefined") return;
-            const raw = localStorage.getItem("savedTrips");
-            if (raw) {
-                try {
-                    setSavedTrips(JSON.parse(raw));
-                } catch {
-                    // ignore parse errors
-                }
-            }
-        }, []);
-
-        useEffect(() => {
-            if (typeof window === "undefined") return;
-            localStorage.setItem("savedTrips", JSON.stringify(savedTrips));
-        }, [savedTrips]);
-    */
-
-
 
 
     return (
