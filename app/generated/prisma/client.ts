@@ -64,3 +64,8 @@ export type Account = Prisma.AccountModel
  * 
  */
 export type Verification = Prisma.VerificationModel
+/**
+ * Model Pin
+ * 
+ */
+export type Pin = Prisma.PinModel

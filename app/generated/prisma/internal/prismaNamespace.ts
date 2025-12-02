@@ -393,7 +393,8 @@ export const ModelName = {
   User: 'User',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  Pin: 'Pin'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -409,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification"
+    modelProps: "user" | "session" | "account" | "verification" | "pin"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -709,6 +710,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Pin: {
+      payload: Prisma.$PinPayload<ExtArgs>
+      fields: Prisma.PinFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PinFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PinPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PinFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PinPayload>
+        }
+        findFirst: {
+          args: Prisma.PinFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PinPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PinFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PinPayload>
+        }
+        findMany: {
+          args: Prisma.PinFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PinPayload>[]
+        }
+        create: {
+          args: Prisma.PinCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PinPayload>
+        }
+        createMany: {
+          args: Prisma.PinCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PinCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PinPayload>[]
+        }
+        delete: {
+          args: Prisma.PinDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PinPayload>
+        }
+        update: {
+          args: Prisma.PinUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PinPayload>
+        }
+        deleteMany: {
+          args: Prisma.PinDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PinUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PinUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PinPayload>[]
+        }
+        upsert: {
+          args: Prisma.PinUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PinPayload>
+        }
+        aggregate: {
+          args: Prisma.PinAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePin>
+        }
+        groupBy: {
+          args: Prisma.PinGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PinGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PinCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PinCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -806,6 +881,22 @@ export const VerificationScalarFieldEnum = {
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
 
 
+export const PinScalarFieldEnum = {
+  id: 'id',
+  lat: 'lat',
+  lng: 'lng',
+  location: 'location',
+  review: 'review',
+  cost: 'cost',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  pinType: 'pinType'
+} as const
+
+export type PinScalarFieldEnum = (typeof PinScalarFieldEnum)[keyof typeof PinScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -868,6 +959,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 
@@ -975,6 +1080,7 @@ export type GlobalOmitConfig = {
   session?: Prisma.SessionOmit
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
+  pin?: Prisma.PinOmit
 }
 
 /* Types for Logging */

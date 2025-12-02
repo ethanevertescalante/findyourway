@@ -18,6 +18,7 @@ model User {
   updatedAt     DateTime
   accounts      Account[]
   sessions      Session[]
+  Pins          Pin[]
 
   @@map("user")
 }
@@ -64,4 +65,29 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+model Pin {
+  id       String @id @default(cuid())
+  lat      Float
+  lng      Float
+  location String
+  review   String
+  cost     String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  pinType String?
+  /**
+   * Pin Types
+   * 1. visited - brown
+   * 2. wish - greyed out
+   */
+
+  @@index([userId])
+  @@map("pin")
 }

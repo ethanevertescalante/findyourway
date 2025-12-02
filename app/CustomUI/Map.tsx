@@ -1,10 +1,9 @@
 'use client'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Icon, Map as LeafletMap } from 'leaflet';
+import {Icon, IconOptions, Map as LeafletMap} from 'leaflet';
 import ButtonLayout from "@/app/CustomUI/ButtonLayout";
-import markerIconPng from "leaflet/dist/images/marker-icon.png"
-import {useRef, useState, useMemo, useEffect} from "react";
+import {useRef, useState, useMemo, useEffect, useCallback} from "react";
 import SearchBar from './SearchBar';
 import { addPinAtCenter } from "./Pins/AddPin";
 import type { PinFormData } from "./Pins/PinMenu"
@@ -14,13 +13,19 @@ import DisplayTrip from "@/app/CustomUI/DisplayTrip";
 import CreateTripName from "@/app/CustomUI/CreateTripName";
 import SavedTripsPanel from "@/app/CustomUI/SavedTripsPanel";
 
+import {PinMarker} from "@/app/CustomUI/Pins/PinMarker";
 
 export type Pin = {
     id: string;
-    position: [number, number]; //lat + lng
+    lat: GLfloat;
+    lng: GLfloat;
     location: string;
     review: string;
-    cost: string; // e.g., USD
+    cost: string;
+    userId: string;
+    createdAt: Date;
+    updatedAt: Date;
+    pinType: string;
     draggable: boolean;
 };
 
@@ -35,6 +40,17 @@ const Map = () => {
     const mapRef = useRef<LeafletMap | null>(null);
 
     const [pins, setPins] = useState<Pin[]>([]);
+    const mapRef = useRef<LeafletMap | null>(null);
+    const fetchPins = useCallback(async () => {
+        const res = await fetch("/api/pins");
+        const data = await res.json();
+        setPins(data);
+    }, []);
+
+    useEffect(() =>  {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        fetchPins().then(r => r);
+    }, [fetchPins]);
 
     const [currentTripPins, setCurrentTripPins] = useState<Pin[]>([]);
     const [currentTripName, setCurrentTripName] = useState<string | null>(null);
@@ -46,10 +62,33 @@ const Map = () => {
 
 
 
-    const leafletIcon = useMemo(() =>
-            new Icon({
-                // @ts-expect-error Next asset import is fine at runtime
-                iconUrl: markerIconPng,
+    type PinUpdate = Partial<Pin> & { id: string };
+    const handleUpdatePin = async (updatedPin: PinUpdate) => {
+        await fetch(`/api/pins/`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updatedPin),
+        });
+
+        setPins(prev => prev.map(pin => pin.id === updatedPin.id ? { ...pin, ...updatedPin } : pin));
+    };
+
+
+    const visitedIcon = useMemo(
+        () =>
+            new Icon<IconOptions>({
+                iconUrl: '/marker-icon.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [0, -30],
+            }),
+        []
+    );
+
+    const wishIcon = useMemo(
+        () =>
+            new Icon<IconOptions>({
+                iconUrl: '/marker-icon-wish.png',
                 iconSize: [25, 41],
                 iconAnchor: [12, 41],
                 popupAnchor: [0, -30],
@@ -62,15 +101,20 @@ const Map = () => {
         [currentTripPins]
     );
 
-    const handleAddPin = (data: PinFormData) => {
-        addPinAtCenter(mapRef.current, setPins, data);
+    const handleAddPin = async (data: PinFormData) => {
+        await addPinAtCenter(mapRef.current, setPins, data);
+        await new Promise(res => setTimeout(res, 1000));
+        await fetchPins()
     };
 
+    const handleDeletePin = async (id: string) => {
+        await fetch("/api/pins", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id }),
+        });
 
-    const togglePinDraggable = (id: string) => {
-        setPins(prev =>
-            prev.map(p => (p.id === id ? { ...p, draggable: !p.draggable } : p))
-        );
+        setPins(prev => prev.filter(p => p.id !== id));
     };
 
 
@@ -134,62 +178,31 @@ const Map = () => {
                 keyboard={false}
                 ref={mapRef}
                 center={[51.505, -0.09]}
-                zoom={10}
+                zoom={3}
                 scrollWheelZoom={false}
-                doubleClickZoom={false}
+                doubleClickZoom={true}
                 style={{ width: '100%', height: '100%', position: 'fixed', top: 0, left: 0 }}
             >
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <Marker
-                    position={[51.505, -0.09]}
-                    icon={
-                        new Icon({
-                            // @ts-expect-error icon string issue, nothing to worry about
-                            iconUrl: markerIconPng,
-                            iconSize: [25, 41],
-                            iconAnchor: [12, 41],
-                            popupAnchor: [0, -30],
-                        })
-                    }
-                >
-                    <Popup closeOnEscapeKey={true}>
-                        A pretty CSS3 popup. <br /> Easily customizable.
-                    </Popup>
-                </Marker>
 
+                {Array.isArray(pins) ? (
+                    <div>
+                        {pins.map((pin) => (
+                            <PinMarker
+                                key={pin.id}
+                                pin={pin}
+                                icon={pin.pinType === "visited" ? visitedIcon : wishIcon}
+                                onUpdate={handleUpdatePin}
+                                onDelete={handleDeletePin}
+                            />
+                        ))}
+                    </div>
+                ) : (<p>you should not see this</p>)}
 
-                {/* Place the pins on the map */}
-                {pins.map((pin) => (
-                    <Marker key={pin.id} position={pin.position} icon={leafletIcon} draggable={pin.draggable}>
-                        <Popup minWidth={30}>
-                            <strong>{pin.location}</strong><br />
-                            {`Review: ${pin.review}`}<br />
-                            {`Cost: $${pin.cost}`}
-
-                            <div style={{ marginTop: 8 }}>
-                                <span onClick={() => togglePinDraggable(pin.id)} style={{ cursor: 'pointer', textDecoration: 'underline' }}>
-                                    {pin.draggable ? 'Lock Pin' : 'Unlock Pin'}
-                                </span>
-                                <span>
-                                    { ' '}
-                                </span>
-                                <span
-                                    onClick={() => togglePinInTrip(pin)}
-                                    style={{ cursor: "pointer", textDecoration: "underline" }}
-                                >
-                                    {isDisplayTripOpen && (!isInCurrentTrip(pin) ? "Add to trip" : "Remove from trip")}
-                                </span>
-                            </div>
-                        </Popup>
-                    </Marker>
-                ))}
-
-                {/* Route between pins in current trip */}
-                <PinDirections waypoints={waypoints} />
-
+                {/* absolutely position the buttons at the bottom */}
                 {/* bottom buttons */}
                 <div className="absolute bottom-4 left-0 w-full flex justify-center z-[650] pointer-events-none">
                     <div className="flex flex-row items-center pointer-events-auto">

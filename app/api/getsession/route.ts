@@ -11,9 +11,6 @@ export async function GET(request: Request) {
         );
     }
 
-
-
-
     const username = session.user.name ?? " ";
     const email = session.user.email ?? " ";
     const image = session.user.image ?? " ";
