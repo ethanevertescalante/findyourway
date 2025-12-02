@@ -4,7 +4,6 @@ import 'leaflet/dist/leaflet.css';
 import {Icon, IconOptions, Map as LeafletMap} from 'leaflet';
 import ButtonLayout from "@/app/CustomUI/ButtonLayout";
 import markerIconPng from "leaflet/dist/images/marker-icon.png"
-import markerIconWishPng from "leaflet/dist/images/marker-icon-wish.png"
 import {useRef, useState, useMemo, useEffect, useCallback} from "react";
 import SearchBar from './SearchBar';
 import { addPinAtCenter } from "./Pins/AddPin";

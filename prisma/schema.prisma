@@ -81,13 +81,6 @@ model Pin {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  pinType String?
-  /**
-   * Pin Types
-   * 1. visited - brown
-   * 2. wish - greyed out
-   */
-
   @@index([userId])
   @@map("pin")
 }
