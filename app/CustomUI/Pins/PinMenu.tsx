@@ -1,11 +1,14 @@
 'use client';
-import React, { useCallback } from 'react';
+import React, {useCallback, useState} from 'react';
 import {TextField, Label, TextArea, Input, FieldError} from 'react-aria-components';
+import Button from "../Buttons/Button";
+import {ButtonGroup} from "@/components/base/button-group/button-group";
+import type {Key} from "react-aria";
 
 export type PinFormData = {
-    location: string;
     review: string;
     cost: string;
+    pinType: string;
 };
 
 type Props = {
@@ -16,6 +19,8 @@ type Props = {
 
 export function PinDetailsMenu({ open, onCloseAction, onAddPinAction }: Props) {
 
+    const [selectedKeys, setSelectedKeys] = useState<Set<Key>>(new Set(["visited"]));
+
     const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -23,14 +28,16 @@ export function PinDetailsMenu({ open, onCloseAction, onAddPinAction }: Props) {
         const fd = new FormData(form);
 
         const data: PinFormData = {
-            location: String(fd.get('location') || ''),
             review:   String(fd.get('review') || ''),
             cost:     String(fd.get('cost') || ''),
+            pinType: String(Array.from(selectedKeys)[0]),
         };
+
+        console.log(data)
 
         onAddPinAction(data);
         onCloseAction();
-    }, [onAddPinAction, onCloseAction]);
+    }, [onAddPinAction, onCloseAction, selectedKeys]);
 
     if (!open) return;
 
@@ -43,30 +50,9 @@ export function PinDetailsMenu({ open, onCloseAction, onAddPinAction }: Props) {
                 <Label className="block w-full text-center text-lg font-medium text-gray-900">Pin Details</Label>
 
                 <form onSubmit={handleSubmit}>
-
-                    {/* Location */}
-                    <TextField isRequired className="flex flex-col gap-1 text-gray-900 mt-4">
-                        <Label className="text-sm font-medium">Location</Label>
-                        <TextArea
-                            name="location"
-                            placeholder="Enter your location"
-                            className="
-                            rounded-md border border-gray-300 bg-white p-3 outline-none
-                            w-full min-h-[90px]
-                            text-gray-900
-                            placeholder:text-gray-350
-                            placeholder:text-sm
-                            [data-focused]:ring-2 [data-focused]:ring-blue-500
-                            [data-invalid]:border-red-500"/>
-                        <FieldError className="mt-1 text-xs text-red-600" />
-
-                    </TextField>
-
-
-
                     {/* Review */}
                     <TextField isRequired className="flex flex-col gap-1 text-gray-900 mt-4">
-                        <Label className="text-sm font-medium">Review</Label>
+                        <Label className="text-sm font-medium">Review:</Label>
                         <TextArea
                             name="review"
                             placeholder="Enter your review"
@@ -86,7 +72,7 @@ export function PinDetailsMenu({ open, onCloseAction, onAddPinAction }: Props) {
 
                 {/* Cost */}
                 <TextField isRequired validationBehavior="native" className="flex flex-col gap-1 text-gray-900 mt-4">
-                    <Label className="text-sm font-medium">Estimated Cost</Label>
+                    <Label className="text-sm font-medium">Estimated Cost:</Label>
                     <Input
                         name="cost"
                         type="number"
@@ -104,6 +90,24 @@ export function PinDetailsMenu({ open, onCloseAction, onAddPinAction }: Props) {
                     <FieldError className="mt-1 text-xs text-red-600" />
 
                 </TextField>
+
+                <div className="pt-2 flex flex-row gap-2 justify-center text-gray-900 mt-4">
+                    <ButtonGroup
+                        size="lg"
+                        selectedKeys={selectedKeys}
+                        selectionMode="single"
+                        onSelectionChange={setSelectedKeys}
+                    >
+                        <Button
+                            id="visited"
+                            buttonName='Visited'
+                        />
+                        <Button
+                            id="wish"
+                            buttonName="Wish"
+                        />
+                    </ButtonGroup>
+                </div>
 
                 <div className="flex justify-end gap-2 mt-4">
                     <button type="button"

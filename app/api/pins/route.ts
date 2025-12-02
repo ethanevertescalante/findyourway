@@ -15,14 +15,15 @@ export async function POST(request: Request) {
         }
 
         const body = await request.json();
-        const { lat, lng, location, review, cost } = body;
+        const { lat, lng, location, review, cost, pinType } = body;
 
         if (
             typeof lat !== "number" ||
             typeof lng !== "number" ||
             typeof location !== "string" ||
             typeof review !== "string" ||
-            typeof cost !== "string"
+            typeof cost !== "string" ||
+            typeof pinType !== "string"
         ) {
             return NextResponse.json(
                 { error: "Invalid request body" },
@@ -39,6 +40,7 @@ export async function POST(request: Request) {
                 location,
                 review,
                 cost,
+                pinType,
                 userId,
             },
         });
@@ -95,12 +97,13 @@ export async function PATCH(request: Request) {
         const userId = session.user.id;
 
         const body = await request.json();
-        const { id, lat, lng, review, cost } = body as {
+        const { id, lat, lng, review, cost, pinType } = body as {
             id?: string;
             lat?: number;
             lng?: number;
             review?: string;
             cost?: string;
+            pinType?: string;
         };
 
         if (!id) {
@@ -191,6 +194,7 @@ export async function PATCH(request: Request) {
                 ...(review !== undefined && { review }),
                 ...(cost !== undefined && { cost }),
                 ...(newLocation !== null && { location: newLocation }),
+                ...(pinType !== undefined && { pinType }),
             },
         });
 

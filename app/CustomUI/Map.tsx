@@ -22,6 +22,7 @@ export type Pin = {
     userId: string;
     createdAt: Date;
     updatedAt: Date;
+    pinType: string;
     draggable: boolean;
 };
 
@@ -53,7 +54,8 @@ const Map = () => {
     };
 
 
-    const leafletIcon = useMemo(() =>
+    const visitedIcon = useMemo(
+        () =>
             new Icon<IconOptions>({
                 // @ts-expect-error Next asset import is fine at runtime
                 iconUrl: markerIconPng,
@@ -63,6 +65,19 @@ const Map = () => {
             }),
         []
     );
+
+    const wishIcon = useMemo(
+        () =>
+            new Icon<IconOptions>({
+                // @ts-expect-error Next asset import is fine at runtime
+                iconUrl: markerIconWishPng,
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [0, -30],
+            }),
+        []
+    );
+
 
     const handleAddPin = async (data: PinFormData) => {
         await addPinAtCenter(mapRef.current, setPins, data);
@@ -111,7 +126,7 @@ const Map = () => {
                             <PinMarker
                                 key={pin.id}
                                 pin={pin}
-                                icon={leafletIcon}
+                                icon={pin.pinType === "visited" ? visitedIcon : wishIcon}
                                 onUpdate={handleUpdatePin}
                                 onDelete={handleDeletePin}
                             />
