@@ -21,6 +21,7 @@ export async function addPinAtCenter(
         location: location,
         review: formData.review,
         cost: formData.cost,
+        pinType: formData.pinType,
     }
     //const costNumber = Number(formData.cost) || 0;
     const createPin = async () => {

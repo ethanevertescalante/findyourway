@@ -890,7 +890,8 @@ export const PinScalarFieldEnum = {
   cost: 'cost',
   userId: 'userId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  pinType: 'pinType'
 } as const
 
 export type PinScalarFieldEnum = (typeof PinScalarFieldEnum)[keyof typeof PinScalarFieldEnum]

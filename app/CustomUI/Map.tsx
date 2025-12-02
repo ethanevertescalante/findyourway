@@ -3,8 +3,6 @@ import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import {Icon, IconOptions, Map as LeafletMap} from 'leaflet';
 import ButtonLayout from "@/app/CustomUI/ButtonLayout";
-import markerIconPng from "leaflet/dist/images/marker-icon.png"
-import markerIconWishPng from "leaflet/dist/images/marker-icon-wish.png"
 import {useRef, useState, useMemo, useEffect, useCallback} from "react";
 import SearchBar from './SearchBar';
 import { addPinAtCenter } from "./Pins/AddPin";
@@ -22,6 +20,7 @@ export type Pin = {
     userId: string;
     createdAt: Date;
     updatedAt: Date;
+    pinType: string;
     draggable: boolean;
 };
 
@@ -53,16 +52,28 @@ const Map = () => {
     };
 
 
-    const leafletIcon = useMemo(() =>
+    const visitedIcon = useMemo(
+        () =>
             new Icon<IconOptions>({
-                // @ts-expect-error Next asset import is fine at runtime
-                iconUrl: markerIconPng,
+                iconUrl: '/marker-icon.png',
                 iconSize: [25, 41],
                 iconAnchor: [12, 41],
                 popupAnchor: [0, -30],
             }),
         []
     );
+
+    const wishIcon = useMemo(
+        () =>
+            new Icon<IconOptions>({
+                iconUrl: '/marker-icon-wish.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [0, -30],
+            }),
+        []
+    );
+
 
     const handleAddPin = async (data: PinFormData) => {
         await addPinAtCenter(mapRef.current, setPins, data);
@@ -111,7 +122,7 @@ const Map = () => {
                             <PinMarker
                                 key={pin.id}
                                 pin={pin}
-                                icon={leafletIcon}
+                                icon={pin.pinType === "visited" ? visitedIcon : wishIcon}
                                 onUpdate={handleUpdatePin}
                                 onDelete={handleDeletePin}
                             />
