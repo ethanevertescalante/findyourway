@@ -169,8 +169,8 @@ export function PinMarker({ pin, icon, onUpdate, onDelete }: PinMarkerProps) {
                     </div>
                 )}
                 <div className="pt-3 flex flex-row justify-start flex-nowrap items-center gap-3 ">
-                        <Link target="_blank" href={`https://www.google.com/search?q=${searchTerm}`} className="text-center underline text-green-900 cursor-pointer bg-green-300 rounded-full w-1/3 font-bold italic">Area Search</Link>
-                        <Link target="_blank" href={`https://www.expedia.com/Hotel-Search?destination=${searchTerm}`} className="text-center underline text-blue-900 cursor-pointer bg-yellow-300 rounded-full w-1/3 font-bold italic">Hotel Search</Link>
+                        <Link target="_blank" href={`https://www.google.com/search?q=${searchTerm}`} className="text-center text-nowrap underline text-green-900 cursor-pointer bg-green-300 rounded-full w-1/3 font-bold italic">Area Search</Link>
+                        <Link target="_blank" href={`https://www.expedia.com/Hotel-Search?destination=${searchTerm}`} className="text-center text-nowrap underline text-blue-900 cursor-pointer bg-yellow-300 rounded-full w-1/3 font-bold italic">Hotel Search</Link>
                         <Link target="_blank" href={`https://www.airbnb.com/s/${searchTerm}/experiences`} className="text-center text-nowrap underline text-white cursor-pointer bg-purple-300 rounded-full w-1/3 font-bold italic">Activity Search</Link>
                 </div>
 
