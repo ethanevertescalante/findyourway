@@ -30,7 +30,7 @@ export async function POST(request: Request) {
 
         if (Array.isArray(pinIds) && pinIds.length > 0) {
             // Only allow pins that belong to this user
-            const userPins = await prisma.pin.findMany({
+            const userPins: { id: string }[] = await prisma.pin.findMany({
                 where: {
                     id: { in: pinIds },
                     userId,
@@ -67,6 +67,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Server error" }, { status: 500 });
     }
 }
+
 
 export async function GET(request: Request) {
     try {
