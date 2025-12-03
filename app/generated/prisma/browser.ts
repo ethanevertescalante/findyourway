@@ -42,3 +42,8 @@ export type Verification = Prisma.VerificationModel
  * 
  */
 export type Pin = Prisma.PinModel
+/**
+ * Model Trip
+ * 
+ */
+export type Trip = Prisma.TripModel

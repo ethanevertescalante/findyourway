@@ -40,9 +40,6 @@ export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts exten
 export { Prisma }
 
 
-// file annotations for bundling tools to include these files
-path.join(__dirname, "libquery_engine-darwin-arm64.dylib.node")
-path.join(process.cwd(), "app/generated/prisma/libquery_engine-darwin-arm64.dylib.node")
 
 /**
  * Model User
@@ -69,3 +66,8 @@ export type Verification = Prisma.VerificationModel
  * 
  */
 export type Pin = Prisma.PinModel
+/**
+ * Model Trip
+ * 
+ */
+export type Trip = Prisma.TripModel
