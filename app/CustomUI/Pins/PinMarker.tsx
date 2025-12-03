@@ -14,9 +14,12 @@ type PinMarkerProps = {
     icon: Icon;
     onUpdate: (updatedPin: Partial<Pin> & { id: string }) => Promise<void>;
     onDelete: (id: string) => Promise<void>;
+    onToggleInTrip?: (pin: Pin) => void;
+    isInCurrentTrip?: boolean;
+    currentTripName?: string | null;
 };
 
-export function PinMarker({ pin, icon, onUpdate, onDelete }: PinMarkerProps) {
+export function PinMarker({ pin, icon, onUpdate, onDelete, onToggleInTrip, isInCurrentTrip, currentTripName }: PinMarkerProps) {
     const [position, setPosition] = useState<[number, number]>([pin.lat, pin.lng]);
     const [isEditingPos, setIsEditingPos] = useState(false);
     const [selectedKeys, setSelectedKeys] = useState<Set<Key>>(new Set([pin.pinType]));
@@ -157,9 +160,12 @@ export function PinMarker({ pin, icon, onUpdate, onDelete }: PinMarkerProps) {
                 />
 
                 {!isEditingPos ? (
-                    <div className="flex flex-row justify-between items-center">
-                        <button className="underline text-blue-900 cursor-pointer bg-blue-300 rounded-full w-1/2 font-bold italic" onClick={handleStartEdit}>Edit Position/Content</button>
-                        <button className="underline text-red-900 cursor-pointer bg-red-300 rounded-full w-1/3 font-bold italic" onClick={handleDeleteMarker}>Delete Marker</button>
+                    <div className="flex flex-row justify-between gap-3 flex-nowrap items-center">
+                        <button className="underline text-blue-900 cursor-pointer bg-blue-300 rounded-full w-1/3 font-bold italic" onClick={handleStartEdit}>Edit</button>
+                        {currentTripName && (
+                            <button className="underline text-white cursor-pointer bg-gray-600 rounded-full w-1/2 font-bold italic" onClick={() => onToggleInTrip?.(pin)}>{isInCurrentTrip ? "Remove From Trip" : "Add To Trip"}</button>
+                        )}
+                        <button className="underline text-red-900 cursor-pointer text-nowrap bg-red-300 rounded-full w-1/3 font-bold italic" onClick={handleDeleteMarker}>Delete</button>
                     </div>
 
                 ) : (

@@ -22,6 +22,9 @@ const CreateTripName: React.FC<CreateTripNameProps> = ({
     const handleSubmit = (e?: React.FormEvent) => {
         if (e) e.preventDefault();
         const safeName = name.trim() || `Trip ${Date.now()}`;
+
+
+
         onSaveName(safeName);
         onSave2();
         setName("");

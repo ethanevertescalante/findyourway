@@ -1,8 +1,6 @@
 
-"use client";
-
 import type { Pin } from "./Map";
-import React, {useCallback} from "react";
+import React from "react";
 
 type Props = {
     open: boolean;
@@ -28,7 +26,7 @@ export function DisplayTrip({ open, onClose, name, pins, onClearTrip, onSaveTrip
 
 
     return (
-        <div className="absolute top-4 left-0 w-full flex justify-center z-[700]  ">
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[700]">
             <div className="flex flex-row items-center gap-2 bg-white/80 backdrop-blur-sm px-3 py-2 rounded-xl shadow-2xl">
                 {/* Trip name + buttons */}
                 <div className="flex items-center gap-2 px-3 py-1 rounded-lg text-xs whitespace-nowrap">
@@ -53,6 +51,7 @@ export function DisplayTrip({ open, onClose, name, pins, onClearTrip, onSaveTrip
                     </button>
                 </div>
 
+                <div className="max-w-[60vw] overflow-x-auto whitespace-nowrap flex items-center gap-2 px-1">
                 {/* Directional bubbles */}
                 {pins.map((pin, index) => (
                     <React.Fragment key={pin.id}>
@@ -78,6 +77,7 @@ export function DisplayTrip({ open, onClose, name, pins, onClearTrip, onSaveTrip
                     </React.Fragment>
                 ))}
             </div>
+        </div>
         </div>
     );
 }

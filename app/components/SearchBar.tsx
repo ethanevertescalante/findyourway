@@ -9,6 +9,7 @@ import 'leaflet-control-geocoder';  // npm i leaflet-control-geocoder
 export default function SearchBar() {
     const map = useMap();
 
+    // @ts-expect-error nothing to see here
     useEffect(() => {
         const ctl = new (L.Control as any).Geocoder().addTo(map);
         return () => map.removeControl(ctl);

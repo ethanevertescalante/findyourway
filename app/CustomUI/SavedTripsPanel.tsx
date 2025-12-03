@@ -46,9 +46,9 @@ const SavedTripsPanel: React.FC<SavedTripsPanelProps> = ({
                             className="border border-gray-200 rounded-md px-2 py-1 text-xs flex justify-between items-center"
                         >
                             <div>
-                                <div className="font-medium">{trip.name}</div>
+                                <div className="font-medium">{trip.tripName}</div>
                                 <div className="text-gray-500">
-                                    {trip.pins.length} pin{trip.pins.length === 1 ? "" : "s"}
+                                    {trip.Pins.length} pin{trip.Pins.length === 1 ? "" : "s"}
                                 </div>
                             </div>
 

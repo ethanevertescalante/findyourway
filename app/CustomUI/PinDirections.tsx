@@ -1,13 +1,18 @@
-'use client'
+'use client';
+
 import React, { useEffect } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 
-type LatLngTuple = [number, number];
-
 type PinDirectionsProps = {
-    waypoints: LatLngTuple[];
+    waypoints: number[][];
 };
+
+// Minimal TS interface for leaflet-routing-machine control
+interface RoutingControl {
+    addTo(map: L.Map): this;
+    on(event: string, handler: (e: unknown) => void): this;
+}
 
 const PinDirections: React.FC<PinDirectionsProps> = ({ waypoints }) => {
     const map = useMap();
@@ -16,10 +21,9 @@ const PinDirections: React.FC<PinDirectionsProps> = ({ waypoints }) => {
         if (!map) return;
         if (waypoints.length < 2) return;
 
-        let routingControl: any;
+        let routingControl: RoutingControl | null = null;
 
         const initRouting = async () => {
-            // important: dynamically import so it runs on the client
             await import('leaflet-routing-machine');
 
             routingControl = (L as any).Routing.control({
@@ -33,17 +37,20 @@ const PinDirections: React.FC<PinDirectionsProps> = ({ waypoints }) => {
                 collapsible: true,
                 createMarker: () => null,
                 fitSelectedRoutes: false,
-            }).addTo(map)
-                .on('waypointschanged', function (e) {
-                    console.log('waypoint changed');
-                })
+            }) as RoutingControl;
+
+            routingControl
+                .addTo(map)
+                .on("waypointschanged", (e: unknown) => {
+                    console.log("waypoint changed", e);
+                });
         };
 
         void initRouting();
 
         return () => {
             if (routingControl) {
-                map.removeControl(routingControl);
+                map.removeControl(routingControl as any); // Leaflet's removeControl isn't typed properly
             }
         };
     }, [map, waypoints]);
