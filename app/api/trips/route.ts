@@ -176,7 +176,7 @@ export async function PATCH(request: Request) {
                     );
                 }
 
-                pinsToSet = userPins.map((p) => ({ id: p.id }));
+                pinsToSet = userPins.map((p: { id: string }) => ({ id: p.id }));
             } else {
                 // explicitly clear pins if an empty array was passed
                 pinsToSet = [];
